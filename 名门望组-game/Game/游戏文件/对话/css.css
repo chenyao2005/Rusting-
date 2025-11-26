@@ -1,0 +1,168 @@
+@media (max-width:1000px) {
+    div #images {
+        width: 100%;
+    }
+    div.img {
+        margin: 3px;
+        float: left;
+        text-align: center;
+    }
+    div.img a img {
+        display: inline-block;
+        margin: 3px;
+        width: 200px;
+        height: 200px;
+    }
+    div.img a:hover img {
+        transform: none;
+    }
+    div.desc {
+        text-align: center;
+        font: 12px ;
+        width: 200px;
+        margin: 10px 5px 10px 5px;
+    }
+    #main{height: auto;}
+  }
+
+@font-face {
+    font-family: "哥特黑白无常";
+    src: url(哥特黑白无常.ttf);
+}
+#content {
+    margin:auto;
+    width:100%;
+    height: 30%;
+    position:absolute;
+    bottom:0;
+    left:0;
+    background-image: url(素材/界面/dialogueback1.png);
+    background-size: 100% 100%;
+}
+#background {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index: -3;
+}
+p.text {
+    Text-indent: 2em;
+    max-width: 75%;
+    position: absolute;
+    line-height: 1.75;
+    font-size:24px;
+    left:20%;
+    color:white;
+    -webkit-text-stroke: 0.3px #000000;
+    font-family: "哥特黑白无常";
+    overflow: auto;
+    user-select: none;
+    top: 15px;
+}
+h1.name{
+    position: absolute;
+    bottom: 85%;
+    left:18%;
+    color:white;
+    -webkit-text-stroke: 0.3px #000000;
+    font-family: "哥特黑白无常";
+    user-select: none;
+}
+img.saylihui{
+    position: absolute;
+    left: 10px;
+    width:20%;
+    height:auto;
+    bottom:0;
+    z-index: 1;
+    user-select: none;
+}
+img.backlihui{
+    position: absolute;
+    width:50%;
+    height:auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom:0;
+    z-index: -2;
+    user-select: none;
+}
+.setting{
+    position: absolute;
+    bottom:10px;
+    right:10%;
+    font-size: 20px;
+    color: #ffffff;
+    -webkit-text-stroke: 0.3px #000000;
+    font-family: "哥特黑白无常";
+}
+#back{
+    position: absolute;
+    bottom:0;
+    right:15%;
+    font-size: 20px;
+    color: #ffffff;
+    -webkit-text-stroke: 0.3px #000000;
+    font-family: "哥特黑白无常";
+}
+
+.button {  
+    display: flex;
+    width: auto; /* 调整宽度为自动 */
+    height: auto; /* 调整高度为自动 */
+    text-align: center;
+    justify-content: center;
+    align-items: center; /* 垂直居中 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;  
+    border: 2px solid #2c2c2c;   
+    background-color: rgba(26, 26, 26, 0.5); /* 80%的不透明度 */  
+    color: #ffffff;  
+    font-size: 30px;  
+    border-radius: 30px;  
+    transition: all 0.4s ease;  
+    outline: none;  
+    overflow: hidden;  
+    font-weight: bold;  
+    cursor: pointer;
+}
+  
+.button::after {  
+    content: "";  
+    position: absolute;  
+    top: 0;  
+    left: 0;  
+    width: 100%;  
+    height: 100%;  
+    background: radial-gradient(  
+      circle,  
+      rgba(255, 255, 255, 0.25) 0%,  
+      rgba(255, 255, 255, 0) 70%  
+    );  
+    transform: scale(0);  
+    transition: transform 0.5s ease;  
+}  
+  
+.button:hover::after {  
+    transform: scale(4);  
+}  
+  
+.button:hover {  
+    border-color: #666666;  
+    /* 在悬停时也可以调整背景色的透明度，但这里保持不变或根据需求调整 */  
+    background: rgba(41, 41, 41, 0.5); /* 示例中保持与初始透明度相同 */  
+}
+
+#video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000; /* 确保视频在最顶层 */
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>拼图</title>
+    <script src="pintu.js"></script>
+    <style>
+      body {
+        background-image: url(../picture/背景/场景/桌子2.jpg);
+        background-size: cover;
+      }
+
+      #puzzle-container {
+        width: 1300px;
+        height: 800px;
+        margin: 0 auto;
+        border: 2px solid #ccc;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #puzzle-board {
+        width: 1300px;
+        height: 800px;
+        position: absolute;
+      }
+
+      .puzzle-piece {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        background-size: 1300px 800px;
+        border: 2px solid #fff;
+        transition: all 0.3s ease-in-out;
+      }
+
+      button {
+        display: block;
+        margin: 20px auto;
+        width: 300px;
+        height: 100px;
+        font-size: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="puzzle-container">
+      <div id="puzzle-board"></div>
+    </div>
+    <button id="shuffle-btn">打乱拼图</button>
+    <div>
+			<button onclick="skip()" style="font-size:20px;margin-top:20px;" >skip</button>
+		</div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const puzzleContainer = document.getElementById("puzzle-container");
+      const puzzleBoard = document.getElementById("puzzle-board");
+      const shuffleButton = document.getElementById("shuffle-btn");
+      const imageSrc =
+        "./parents.png"; // 替换为你的图片地址
+      const rows = 3;
+      const cols = 3;
+      const pieces = [];
+
+      let emptyPiece;
+      let isShuffling = false;
+
+      // 创建拼图块
+      function createPuzzlePieces() {
+        const pieceWidth = puzzleContainer.offsetWidth / cols;
+        const pieceHeight = puzzleContainer.offsetHeight / rows;
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const piece = document.createElement("div");
+            piece.className = "puzzle-piece";
+            piece.style.width = `${pieceWidth}px`;
+            piece.style.height = `${pieceHeight}px`;
+            piece.style.backgroundImage = `url(${imageSrc})`;
+            piece.style.backgroundPosition = `${-col * pieceWidth}px ${
+              -row * pieceHeight
+            }px`;
+            piece.style.top = `${row * pieceHeight}px`;
+            piece.style.left = `${col * pieceWidth}px`;
+            piece.dataset.row = row;
+            piece.dataset.col = col;
+
+            if (row === rows - 1 && col === cols - 1) {
+              emptyPiece = piece;
+              piece.classList.add("empty");
+            } else {
+              piece.addEventListener("click", () => {
+                if (!isShuffling) {
+                  movePiece(piece);
+                }
+              });
+            }
+
+            puzzleBoard.appendChild(piece);
+            pieces.push(piece);
+          }
+        }
+      }
+
+      // 移动拼图块
+      function movePiece(piece) {
+        const emptyPieceRow = parseInt(emptyPiece.dataset.row);
+        const emptyPieceCol = parseInt(emptyPiece.dataset.col);
+        const pieceRow = parseInt(piece.dataset.row);
+        const pieceCol = parseInt(piece.dataset.col);
+
+        if (
+          (pieceRow === emptyPieceRow &&
+            Math.abs(pieceCol - emptyPieceCol) === 1) ||
+          (pieceCol === emptyPieceCol &&
+            Math.abs(pieceRow - emptyPieceRow) === 1)
+        ) {
+          const tempRow = emptyPieceRow;
+          const tempCol = emptyPieceCol;
+          emptyPiece.style.top = `${pieceRow * piece.offsetHeight}px`;
+          emptyPiece.style.left = `${pieceCol * piece.offsetWidth}px`;
+          emptyPiece.dataset.row = pieceRow;
+          emptyPiece.dataset.col = pieceCol;
+
+          piece.style.top = `${tempRow * piece.offsetHeight}px`;
+          piece.style.left = `${tempCol * piece.offsetWidth}px`;
+          piece.dataset.row = tempRow;
+          piece.dataset.col = tempCol;
+        }
+
+        checkWin();
+      }
+
+      let isWin = false; // 添加标志位
+
+      // 检查是否完成拼图
+      function checkWin() {
+        let isPuzzleComplete = true;
+        for (let i = 0; i < pieces.length; i++) {
+          const piece = pieces[i];
+          const row = parseInt(piece.dataset.row);
+          const col = parseInt(piece.dataset.col);
+          if (row !== Math.floor(i / cols) || col !== i % cols) {
+            isPuzzleComplete = false;
+            break;
+          }
+        }
+
+        if (isPuzzleComplete && !isWin && !isShuffling) {
+          // 添加条件判断
+          isWin = true; // 设置标志位为true
+          setTimeout(() => {
+            alert("恭喜！你完成了拼图！");
+            shuffleButton.disabled = false;
+            isWin = false; // 重置标志位为false
+          }, 200);
+          localStorage.setItem("CD", 76);
+	        location.href="../对话/dialogue.html";
+        }
+      }
+      // 打乱拼图
+      function shufflePuzzle() {
+        isShuffling = true;
+        shuffleButton.disabled = true;
+        isWin = false; // 重置标志位为false
+
+        const shuffleCount = 100;
+        let count = 0;
+
+        const intervalId = setInterval(() => {
+          const randomIndex = Math.floor(Math.random() * pieces.length);
+          const randomPiece = pieces[randomIndex];
+          movePiece(randomPiece);
+          count++;
+
+          if (count >= shuffleCount) {
+            clearInterval(intervalId);
+            isShuffling = false;
+            shuffleButton.disabled = false;
+          }
+        }, 10);
+      }
+      createPuzzlePieces();
+      shuffleButton.addEventListener("click", shufflePuzzle);
+    });
+  </script>
+</html>

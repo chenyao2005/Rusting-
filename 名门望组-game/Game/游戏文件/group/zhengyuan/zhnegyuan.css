@@ -1,0 +1,135 @@
+@font-face {
+    font-family: "白路棒棒手写体" ;
+    src: url(./白路棒棒手写体.ttf);
+}
+
+body {
+    font-family: "白路棒棒手写体";
+    background: url(./background.png) no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: #cccccc; 
+}
+
+.information {
+    padding: 20px;
+    width: 500px;
+    height: 400px;
+    position: relative;
+    left: 120px;
+    top: 35px;
+    font-size: 30px;
+
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(177, 180, 185, 0.65);
+    border-radius: 12px;
+    border: 1px solid rgba(168, 18, 18, 0.125);
+}
+/* From Uiverse.io by xXJollyHAKERXx */ 
+.spinner {
+    position: relative;
+    left: 200px;
+    top: 20px;
+    background-image: linear-gradient(rgb(186, 66, 255) 35%,rgb(0, 225, 255));
+    width: 365px;
+    height: 365px;
+    animation: spinning82341 1.7s linear infinite;
+    text-align: center;
+    border-radius: 182px;
+    filter: blur(1px);
+    box-shadow: 0px -5px 20px 0px rgb(186, 66, 255), 0px 5px 20px 0px rgb(0, 225, 255);
+  }
+  
+  .spinner1 {
+    background-color: rgb(36, 36, 36);
+    width: 360px;
+    height: 360px;
+    border-radius: 180px;
+    filter: blur(10px);
+  }
+  
+  @keyframes spinning82341 {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  img {
+    display: block;
+    position: absolute;
+    left: 231px ;
+    top: 51px;
+  }
+
+  /* 以下为下拉框样式 */
+  .title {
+    font-size: 50px;
+    position: relative;
+    left: 800px;
+    top: -700px;
+    cursor: pointer;
+}
+
+.title:hover + .collapse {
+    grid-template-rows: 1fr;
+}
+
+.collapse {
+  font-size: 25px;
+  width: 900px;
+    position: relative;
+    left: 800px;
+    top: -700px;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.34, 0.69, 0.1, 1);
+}
+
+.collapse > div {
+    background-color: #77a0f1;
+    overflow: hidden;
+}
+
+/* games */
+h1 {
+    font-size: 50px;
+    position: relative;
+    left: 800px;
+    top: -700px;
+}
+
+#LOL {
+  display: block;
+  position:relative;
+  left: 800px;
+  top: -700px;
+}
+
+#HK {
+  display: block;
+  position:relative;
+  left: 1200px;
+  top: -1010px;
+}
+
+#player {
+  display: block;
+  position:relative;
+  left: 800px;
+  top: -1000px;
+}
+
+#Lizijia {
+  display: block;
+  position:relative;
+  left: 1200px;
+  top: -1000px;
+}
+
+#SYQ {
+  display: block;
+  position:relative;
+  left: 800px;
+  top: -1300px;
+}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>setting</title>
+    <link rel="stylesheet" href="home.css">
+    <style>
+        @media (max-width:1000px){
+            .setting-div{
+                 width: 90%;
+                 height: 90%;
+                 top: 5%;
+                 left: 5%;
+            }
+            .setting-item input[type="range"] {
+            width: 50%;
+            position: absolute;
+            transform: translate(-320px,100px);
+            left: 100px;
+        }
+            .setting-item output {
+            font-family: "哥特黑白无常";
+            font-size: 40px;
+            position: absolute;
+            transform: translate(-800px,100px);
+        }
+
+        }
+        body {
+            background-image: url(./picture_home/desk.jpg);
+            font-family: "哥特黑白无常";
+        }
+        .setting-div {
+            background-color: white;
+            opacity: 0.4;
+            position: absolute;
+            top: 20px;
+            left: 50px;
+            bottom:20px;
+            right: 50px;
+            border-radius: 20px;
+            padding: 20px;
+        }
+        .setting-div h1 {
+            font-family: "哥特黑白无常";
+            text-align: center;
+            font-size: 50px;
+        }
+        .setting-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 100px;
+            margin-top:100px;
+        }
+        .setting-item h2 {
+            font-family: "哥特黑白无常";
+            font-size: 40px;
+            max-width: 300px;
+            position:relative;
+            left:100px;
+        }
+        .setting-item input[type="range"] {
+            width: 50%;
+            position: absolute;
+            left: 400px;
+        }
+        .setting-item output {
+            font-family: "哥特黑白无常";
+            font-size: 40px;
+            position: absolute;
+            left: 1100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg">
+    <div class="setting-div">
+        <h1>设置</h1>
+        <div class="setting-item">
+            <h2>背景音量大小</h2>
+            <input type="range" min="0" max="100" value="0" id="volume">
+            <output for="volume" id="volume-output"></output>
+        </div>
+        <div class="setting-item">
+            <h2>文本显示速度</h2>
+            <input type="range" min="0" max="100" value="0" id="text-speed">
+            <output for="text-speed" id="text-speed-output">50</output>
+        </div>
+        </div>
+        <button style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);"><a onclick="getBack()">Back</a></button>
+    </div>
+    <script>
+        var volume = localStorage.getItem('volume') || 50;
+        var textSpeed = localStorage.getItem('textSpeed') || 50;
+        function initializeOutput() {
+            document.getElementById('volume').value = volume;
+            document.getElementById('volume-output').value = volume;
+            document.getElementById('text-speed').value = textSpeed;
+            document.getElementById('text-speed-output').value = textSpeed;
+        }
+        window.onload = initializeOutput();
+        function updateOutput(input, output) {
+            input.addEventListener('input', function() {
+                output.value = input.value;
+            });
+        }
+        updateOutput(document.getElementById('volume'), document.getElementById('volume-output'));
+        updateOutput(document.getElementById('text-speed'), document.getElementById('text-speed-output'));
+        updateOutput(document.getElementById('fast-forward'), document.getElementById('fast-forward-output'));
+        updateOutput(document.getElementById('auto-mode'), document.getElementById('auto-mode-output'));
+        updateOutput(document.getElementById('text-color'), document.getElementById('text-color-output'));
+        function getBack(){
+            localStorage.setItem('volume', document.getElementById('volume').value);
+            localStorage.setItem('textSpeed', document.getElementById('text-speed').value);
+            window.location.href = "home.html";
+        }
+    </script>
+</body>
+</html>

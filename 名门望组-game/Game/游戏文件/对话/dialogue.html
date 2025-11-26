@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rusting</title>
+    <link type="text/css" rel="stylesheet" href="css.css" /> 
+    <script src="data.js"></script>
+</head>
+<body>
+    <style>
+        @media screen and (max-width: 1000px) {
+            #text{
+                text-overflow:ellipsis;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;  
+                line-clamp:3;
+                -webkit-box-orient: vertical;
+            }
+            }
+            .saylihui{
+                transform: translate(0, -200px);
+                width:30%;
+                height: auto;
+            }
+    </style>
+    <img id="background" src="">
+    <div id="content">
+        <img src="" alt="lihui" class="saylihui" id="saylihui">
+        <img src="" alt="lihui" class="backlihui" id="backlihui">
+        <h1 class="name" id="name"></h1>    
+        <p  class="text" id="text"></p>
+        <p class="setting"><a onclick="getBack()" style="cursor: pointer;">上一页</a>&nbsp;&nbsp;<a onclick="save()" style="cursor: pointer;">保存</a> &nbsp;&nbsp;<a onclick="toSetting()" style="cursor: pointer;">设置</a> &nbsp;&nbsp;<a href="..\homepage\home.html" style="text-decoration: none;color: #ffffff;
+    -webkit-text-stroke: 0.3px #000000;" onclick="toHome()">主菜单</a></p>
+    </div>        
+        <button class="button" id="button1">按钮1</button>
+        <button class="button" id="button2">按钮2</button>
+        <audio id="music"></audio>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页面</title>
+    <link rel="stylesheet" href="home.css">
+    <script src="home.js"></script>
+    <style>
+        body{
+            font-family: "哥特黑白无常";
+        }
+        #music {
+            width: 100px;height: 100px;
+            border-radius: 100px;
+            position: absolute;
+            top: -26%;
+            left: 64%;
+        }
+        #music img {
+            width: 70px;height: 70px;
+            position: relative;
+            margin-top:10px ;
+        }
+    </style>
+</head>
+<body>
+    <audio id="myAudio" src="./family_tune.mp3"></audio>
+    <div id="bg">
+    <div id="title">
+        <h1 align="center">Rusting</h1>
+    </div>
+    <br>
+    <div class="buttons">
+        <button onclick="toStart()">Start</button>
+        <br>
+        <button onclick="toContinue()">continue</button>
+        <br>         
+        <button onclick="window.location.href='../save/load.html'">Load Game</button>
+        <br>
+        <button onclick="window.location.href='./setting.html'">Setting</button>
+        <br>
+        <button onclick="window.location.href='../group/group.html'">Group</button>
+        <br>
+        <button onclick="togglePlay()" id="music"><img src="./picture_home/music.png" alt=""></button>
+    </div>
+</div>
+</body>
+
+</html>
+
+<script>
+    var myAudio = document.getElementById("myAudio");
+  
+    function togglePlay() {
+      return myAudio.paused ? myAudio.play() : myAudio.pause();
+    }
+  </script>

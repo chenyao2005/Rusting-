@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <link rel="stylesheet" href="./newcount.css">
+</head>
+<body>
+    <div class="container">
+        <input required="" type="text" name="username" class="input">
+        <label class="label">Username</label>
+    </div>
+    <div class="password">
+        <input required="" type="password" name="password" class="input2">
+        <label class="label2">Password</label>
+    </div>
+    <button class="login-button" onclick="registerUser()">Establish</button>
+    <script>
+        function registerUser() {
+            const username = document.querySelector('input[name="username"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+            if (!username || !password) {
+                alert('Username and password cannot be empty');
+                return;
+            }
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const userExists = users.some(user => user.username === username);
+            if (userExists) {
+                alert('Username already exists');
+                return;
+            }
+            users.push({ username, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Registration successful');
+            window.location.href = '../landing/landing.html'; 
+        }
+    </script>
+</body>
+</html>

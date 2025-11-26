@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>五子棋</title>
+		<style>
+
+
+			.title{
+				text-align:center;
+			}
+			
+			.chess{
+				display: block;/*块级元素*/
+				margin: 50px auto;
+				box-shadow:5px 5px 5px #B9B9B9,-2px -2px 2px #EFEFEF;
+				cursor: pointer;
+				/* 光标是一个小手 */
+			}
+			div{
+				text-align: center;
+			}
+ 
+ 
+			
+			.restart{
+				padding: 10px 20px;
+				background-color: #B9B9B9;
+				border-radius: 5px;
+				color: white;
+				cursor: pointer;
+				overflow: hidden;
+			}
+			
+			.restar{
+				padding: 10px 40px;
+				background-color: #B9B9B9;
+				border-radius: 5px;
+				color: white;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<h3 class="title">--五子棋--</h3>
+		<!--canvas是一个矩形画布，可以用js在上面绘画，只能设置width和height两个属性-->
+		<canvas class="chess" width="450px" height="450px"></canvas>
+		<div>
+			<!-- <a class="restart" onclick="rst()">重新开始</a> -->
+			<!-- <a class="restar" onclick="save()">保存</a> -->
+			<button class="restar" onclick="saveChess() ">保存</button>
+			<button class="restart " onclick="getSaveChess()">继续</button>
+			<button class="restart" onclick="deleteChess()">重新开始</button>
+		</div>	
+		<div>
+			<button onclick="skip()" style="font-size:20px;margin-top:20px;" >skip</button>
+		</div>
+	</body>
+	
+	<script>
+		var chess = document.getElementsByClassName("chess")[0];
+		 //    我们通过getElementsByClassName得到的是一个数组
+ 
+		var title = document.getElementsByClassName("title")[0];
+ 
+		var context = chess.getContext("2d");
+		context.strokeStyle="#B9B9B9"
+		
+		window.onload=function(){
+			drawChessBoard();
+		}
+		
+		
+		function drawChessBoard(){
+			
+			for(var i=0;i<15;i++){
+				//moveto起点坐标，lineto终点坐标
+				context.moveTo(15,15+i*30);
+				context.lineTo(435,15+i*30);
+				//连接2点
+				context.stroke();
+				
+				context.moveTo(15+i*30,15);
+				context.lineTo(15+i*30,435);
+				context.stroke();
+				
+			}
+			
+		}
+		
+		
+		//胜利判定数组,这里我设置的三维数组，第一位是x轴的，第二位是y轴的，第三位是第几种方法，下面计算的时候用的位置都是第一个子的位置
+		var wins=[];
+		for(var i=0;i<15;i++){
+			wins[i]=[];
+			for(var j=0;j<15;j++){
+				wins[i][j]=[]
+			}		
+		}
+		
+		//赢法的编号
+		var count=0;
+ 
+		//横线赢
+		for(var i=0;i<15;i++){
+			for(var j=0;j<11;j++){
+				for(var k=0;k<5;k++){
+					wins[j+k][i][count]=true;
+				}
+				
+				count++;
+			}
+			
+		}
+		
+		//竖线赢		
+		for(var i=0;i<15;i++){
+			for(var j=0;j<11;j++){
+				for(var k=0;k<5;k++){
+					wins[i][j+k][count]=true;		
+				}				
+				count++;
+			}			
+		}
+		
+		//斜线赢（往右下的）
+		for(var i=0;i<11;i++){
+			for(var j=0;j<11;j++){
+				for(var k=0;k<5;k++){
+					wins[i+k][j+k][count]=true;
+				}
+				count++;
+			}
+		}
+				
+		//斜线（左下往右上）	
+		for(var i=0;i<11;i++){
+			for(var j=14;j>3;j--){
+				for(var k=0;k<5;k++){
+					wins[i+k][j-k][count]=true;
+				}
+				count++;
+			}
+		}
+ 
+		
+		//定义二维数组标记棋盘上的每个坐标是否有子
+		var chessboard=[];
+		for(var i=0;i<15;i++){
+			chessboard[i]=[];
+			for(var j=0;j<15;j++){
+				chessboard[i][j]=0;
+			}
+		}
+		// getSaveChess();
+		
+		//下棋
+		var me=true;//用来标记一下人是否可以下棋
+		var over=false;//标记游戏是否结束
+		
+		var myWin=[];//记录用户在赢法上的分值
+		var computerWin=[];//记录计算机在赢法上的分值
+		for(var i=0;i<count;i++){
+			myWin[i]=0;
+			computerWin[i]=0;
+		}
+		
+		chess.onclick=function(e){
+			 //如果游戏结束不可以下棋,判断人是否可以下棋
+			 if(over||!me){
+                    return;
+                }
+			
+			//获取x轴坐标，怕他点的位置不准确，你要让它也能选到地方
+			var x=e.offsetX;
+			
+			//获取Y轴坐标
+			var y=e.offsetY;
+			
+			var i = Math.floor(x/30);//意思是强行向下取。1.3取1,因为取点不可能点的很准
+			var j = Math.floor(y/30);
+ 
+			if(chessboard[i][j]==0){//这个是表示如果这个地方标记的是0，没有下子，那么这里就可以下一个
+				
+				//下一个子
+				oneStep(i,j,me);
+				//标记已经落子
+				chessboard[i][j]=1;
+				
+				for(var k=0;k<count;k++){
+					if(wins[i][j][k]){
+						
+						myWin[k]++;
+ 
+						if(myWin[k]==5){
+							title.innerHTML="恭喜你赢了！！！"
+							over=true;
+							localStorage.setItem("CD", 163);
+							location.href="../对话/dialogue.html";
+						}
+					}
+					
+				}
+				
+			}else {
+				alert("不能下")
+				return
+			}
+			
+ 
+			if(!over){
+				me=!me;
+			}
+			//计算机落子
+			computerAI()
+		}
+		
+		
+		function computerAI(){
+			//我采用的是分值方法让计算机明白，当我有4个连在一起快5个了，你要拦截我下，看谁的分值高，如果计算机分值高他就下自己的，如果人分值高，那就拦截我下的
+			
+			//空白子在用户所占用赢法上的分值
+			var myScore=[];
+			//空白子在计算机所占用赢法上的分值
+			var computerScore=[];
+			
+			for(var i=0;i<15;i++){
+				
+				myScore[i]=[];
+				computerScore[i]=[];
+				
+				for(var j=0;j<15;j++){
+					myScore[i][j]=0
+					computerScore[i][j]=0;
+				}
+				
+			}
+		//空白字的最大分值
+		var max=0;
+			//最大分值空白字所在的坐标
+			var x=0,y=0;
+			
+			for(var i=0;i<15;i++){
+				for(var j=0;j<15;j++){
+					//判断是否是空白子				
+					if(chessboard[i][j]==0){
+						
+						for(var k=0;k<count;k++){
+							if(wins[i][j][k]){
+								
+								if(myWin[k]==1){
+									myScore[i][j]+=200;
+								}else if(myWin[k]==2){
+									myScore[i][j]+=4000;
+								}else if(myWin[k]==3){
+									myScore[i][j]+=20000;
+								}else if(myWin[k]==4){
+									myScore[i][j]+=100000;
+								}
+								
+								if(computerWin[k]==1){
+									computerScore[i][j]+=220;
+								}else if(computerWin[k]==2){
+									computerScore[i][j]+=5200;
+								}else if(computerWin[k]==3){
+									computerScore[i][j]+=22000;
+								}else if(computerWin[k]==4){
+									computerScore[i][j]+=200000;
+								}
+								
+							}
+							
+						}
+						
+						if(myScore[i][j]>max){
+							max=myScore[i][j];
+							x=i;
+							y=j;
+						}else if(myScore[i][j]==max){
+							if(computerScore[i][j]>max){
+								max=computerScore[i][j];
+								x=i;
+								y=j;
+							}						
+						}
+						
+						if(computerScore[i][j]>max){
+							max=computerScore[i][j];
+							x=i;
+							y=j;
+						}else if(computerScore[i][j]==max){
+							if(myScore[i][j]>max){
+								max=myScore[i][j];
+								x=i;
+								y=j;
+							}
+						}
+						
+						
+					}
+					
+				}
+				
+			}
+			
+			//判断完就让她落子
+			oneStep(x,y,me);
+ 
+			//落子后要他显示这个地方是落子的了
+			chessboard[x][y]=2;
+			
+			for(var k=0;k<count;k++){
+				if(wins[x][y][k]){
+					computerWin[k]+=1;
+					if(computerWin[k]==5){
+						title.innerHTML="抱歉计算机赢了！！"
+						over=true;
+					}
+				}
+			}
+			
+			if(!over){
+				me=!me;
+			}
+			
+			
+			
+		}
+		
+		
+		//落子的方法
+		function oneStep(i,j,me){
+			//把前面的草稿清除一下
+			context.beginPath();
+			
+			context.arc(15+i*30,15+j*30,13,0,2*Math.PI);
+			//画⚪，2*Math.PI是2Π的意思，0是3点钟方向，13半径
+			
+			context.closePath();
+			
+			var yanse;
+                    if(me){
+                        yanse="black";
+                    }else{
+                        yanse="red";
+                    }
+                    context.fillStyle=yanse;
+                    context.fill();
+                
+                
+                }
+			
+ 
+		//刷新浏览器
+				function rst(){
+			window.location.reload();
+		}
+		// 保存
+		  function saveChess() {
+			  //获取本地存储对象
+   let storage = window.localStorage;
+   // 将棋盘写进本地存储
+   storage.setItem("chess", JSON.stringify(chessboard));
+   alert("保存成功")
+  }
+  // 获取记录
+  function getSaveChess() {
+	   //获取本地存储对象
+   let storage = window.localStorage;
+   //将本地存储中的chess取出来，因为取出的东西是json形式
+   let chess = storage.getItem('chess')
+   //所以要判断取出的值是不是空或null
+   if(chess != null && chess != ''){
+	   //将json格式转换成对象
+    chessboard = JSON.parse(chess)
+	//下面两个for循环是重新渲染棋盘
+    for(let i = 0; i < chessboard.length; i++){
+      for(let j = 0; j < chessboard[i].length; j++ ){
+        if(chessboard[i][j]==1) {
+ 
+          oneStep(i, j, true)
+        }else if(chessboard[i][j]==2){
+			oneStep(i, j, false)
+		}
+        
+      }
+    }
+    
+   }
+}
+		function deleteChess() {
+			//获取本地存储对象，设置chess为空
+			var t = localStorage
+			t.setItem('chess','')
+			//刷新页面
+			window.location.reload();
+		}
+	</script>
+	<script src="wuziqi.js"></script>
+</html>

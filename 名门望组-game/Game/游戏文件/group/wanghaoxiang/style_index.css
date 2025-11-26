@@ -1,0 +1,64 @@
+* {
+    font-family: 'KaiTi';
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin:0;
+    padding:0;
+    color: #fff;
+}
+header {
+    text-align: center;
+    padding:50px;
+    background-color: rgba(175, 221, 196, 0.7);
+    border-radius:10px;
+    margin:20px;
+}
+h1 {
+    font-size: 52px;
+    margin: 0;
+}
+p {
+    font-size:1.2em;
+    line-height:1.5;
+}
+.profile-photo {
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    margin:20px 0;
+    border:5px solid #fff;
+}
+h2 {
+    font-size: 40px;
+    margin: 0;
+    color: #4315b8;
+}
+.hobbies {
+    display: flex;
+    justify-content: center;
+    margin:20px 0;
+}
+footer {
+    text-align: center;
+    margin-top:40px;
+    font-size:0.9em;
+}
+.center_text{
+    text-align: center;
+}
+.button-style {  
+    display: inline-block;  
+    padding:10px 20px;  
+    font-size:16px;  
+    color: white;  
+    background-color: blue;  
+    text-decoration: none;  
+    border-radius: 5px;  
+    font-size: 20px;
+}  
+  
+.button-style:hover {  
+    background-color: darkblue;  
+}

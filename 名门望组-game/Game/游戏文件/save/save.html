@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>存档</title>
+    <link rel="stylesheet" href="../homepage/home.css">
+    <script src="save.js"></script>
+    <style>
+        @media screen and (max-width: 1000px) {
+            body{
+                width: 100%;
+                height: 300%;
+            }
+            .buttons{
+                flex-direction: column;
+                flex-wrap: wrap;
+                transform: translate(0,500px);
+            }
+            .setback{
+                bottom:0;
+                transform: translate(0,1100px);
+            }
+        }
+        body {
+            background-image: url(../homepage/picture_home/desk.jpg);
+            background-size: cover;
+            display: flex; 
+            justify-content: center;
+            align-items: center; 
+            height: 100vh;
+            margin: 0; 
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+        .buttons button {
+            margin: 0 20px;
+            height: 600px;width: 400px;
+            font-size: 57px;
+        }
+        .setback {
+            position: absolute;
+            bottom:10px;
+        }
+        .buttons img {
+            height:200px;
+            width:300px;
+            margin-top:50px;
+        }
+        .buttons p {
+            font-size:16px;
+        }
+        .buttons h1 {
+            margin-bottom: -10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="buttons">
+        <button onclick="saveGame1()" >
+            <img src="" alt="save1" id="save1img">
+            <p id="save1text">save1</p>
+            <h3>save1<h3>
+        </button>
+        <br>
+        <button onclick="saveGame2()">
+            <img src="" alt="save2" id="save2img">
+            <p id="save2text">save1</p>
+            <h3>save2<h3>
+        </button>
+        <br>
+        <button onclick="saveGame3()">
+            <img src="" alt="save3" id="save3img">
+            <p id="save3text">save1</p>
+            <h3>save3<h3>
+        </button>
+    </div>
+    <div class ="setback">
+        <button onclick="BackToGame()">返回游戏</button>
+    </div>
+</body>
+</html>

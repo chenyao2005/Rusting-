@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing</title>
+    <link rel="stylesheet" href="landing.css">
+    <script src="landing.js"></script>
+</head>
+<body>
+<div class="container">
+  <input required="" type="text" name="username" class="input">
+  <label class="label">Username</label>
+</div>
+<div class="password">
+    <input required="" type="password" name="password" class="input2">
+    <label class="label2">Password</label>
+</div>
+<button class="login-button" onclick="login()">Login</button>
+<button class="newcount-button" onclick="window.location.href='../newcount/newcount.html'">NewCount</button>
+
+<script>
+    function login() {
+        const inputUsername = document.querySelector('input[name="username"]').value;
+        const inputPassword = document.querySelector('input[name="password"]').value;
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userFound = users.some(user => user.username === inputUsername && user.password === inputPassword);
+        if (userFound) {
+            alert('successfully logged in');
+            localStorage.setItem("CD", 0);
+            location.href = "../homepage/home.html";
+        } else {
+            alert('Invalid username or password');
+        }
+    }
+</script>
+</body>
+</html>

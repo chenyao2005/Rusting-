@@ -1,0 +1,28 @@
+#puzzle-container {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    border: 2px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+#puzzle-board {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+}
+
+.puzzle-piece {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    background-size: 300px 300px;
+    border: 2px solid #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+}
