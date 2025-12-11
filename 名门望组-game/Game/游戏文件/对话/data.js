@@ -1182,7 +1182,7 @@ var dialogues = [
     },{
         id:126,
         text: "开门之后，那，那可是我的母亲啊，是吗？是吧，冥冥之中我似乎能够确认那就是我的母亲，这一切十分得不真实，好吧本来就不是真实的，但是在此之前，我似乎没有真正地感知到这一切",
-        music: "../音效/咔哒.MP3",
+        music: "../音效/咔哒.mp3",
         name: "",
         saylihui: "",
         backlihui: "",
@@ -1256,7 +1256,7 @@ var dialogues = [
     },{
         id:134,
         text: "开门的只见一个三十岁左右的女人，瘦瘦的，手腕上有几道旧伤疤，面色有点苍白发着黄，看起来不怎么外出做活，黑眼袋挺重的，但仍可以从那憔悴的面容下看出她原本美丽的容颜。",
-        music: "../音效/咔哒.MP3",
+        music: "../音效/咔哒.mp3",
         name: "",
         saylihui: "",
         backlihui: "素材/立绘/母亲.png",
@@ -2562,14 +2562,24 @@ var dialogues = [
     },
 ];
 
-var currentDialogue = localStorage.getItem("CD") || 0;
+// MODIFICATION 1: 确保 currentDialogue 和其他 localStorage 值是整数
+var currentDialogue = parseInt(localStorage.getItem("CD")) || 0;
 var textFullyShown = false;
 var selectedOption = -1;
 var interval;
-var textSpeed =localStorage.getItem("textSpeed") || 50;
-var volume = localStorage.getItem("volume") || 100;
+var textSpeed =parseInt(localStorage.getItem("textSpeed")) || 50;
+var volume = parseInt(localStorage.getItem("volume")) || 100;
 
 function showMessage() {
+    // 额外的检查，以防 currentDialogue 变成一个无效的数组索引
+    if (dialogues[currentDialogue] === undefined) {
+        console.error("尝试显示一个不存在的对话ID: " + currentDialogue);
+        // 尝试重置到开始对话ID，防止无限错误
+        currentDialogue = 0;
+        // 如果是 0 仍然不存在，则中止
+        if (dialogues[currentDialogue] === undefined) return;
+    }
+
     document.getElementById("button1").style.display = "none";
     document.getElementById("button2").style.display = "none";
     selectedOption = -1;
@@ -2613,6 +2623,7 @@ function showMessage() {
 }
 
 function showOptions() {
+// ... (showOptions function is the same)
     if (dialogues[currentDialogue].option) {
         switch (dialogues[currentDialogue].option.length) {
             case 2:
@@ -2658,8 +2669,31 @@ function getNextDialogue(selectedOption) {
         currentDialogue = dialogues[currentDialogue].next;
     }
 }
+// MODIFICATION 2: 改进 getBack()，加入更严格的边界检查
 function getBack() {
-    currentDialogue = dialogues[currentDialogue].back;
+    // 1. 检查当前 ID 是否有效，防止访问 dialogues[undefined]
+    if (dialogues[currentDialogue] === undefined) {
+        // 如果当前状态已损坏，无法后退，直接停止
+        console.error("当前对话ID无效，无法后退: " + currentDialogue);
+        return; 
+    }
+    
+    // 2. 检查是否在第一个对话 (ID 0)
+    // 对话 0 是起始点，不应有“上一页”
+    if (currentDialogue == 0) {
+        return;
+    }
+    
+    // 3. 获取后退 ID
+    let backId = dialogues[currentDialogue].back;
+    
+    // 4. 检查后退 ID 是否有效
+    if (dialogues[backId] === undefined) {
+        console.error("后退ID无效或超出范围: " + backId);
+        return;
+    }
+    
+    currentDialogue = backId;
     showMessage();
 }
 
@@ -2719,3 +2753,16 @@ function initGame() {
 window.addEventListener("load", function () {
     initGame();
 });
+
+// 如果是在 Node 环境中 (Jest运行时)，导出这些变量和函数
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        dialogues,
+        CheckCG,
+        // 如果 currentDialogue 是全局变量，建议封装成 getter/setter 或直接导出对象以便测试修改
+        // 这里假设你可以直接导出或在测试中访问
+        getCurrentDialogue: () => typeof currentDialogue !== 'undefined' ? currentDialogue : 0, 
+        setCurrentDialogue: (val) => { currentDialogue = val },
+        // 导出其他可能的辅助函数
+    };
+}
