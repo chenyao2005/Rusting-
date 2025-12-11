@@ -25,7 +25,8 @@
     </style>
 </head>
 <body>
-    <audio id="myAudio" src="./family_tune.mp3"></audio>
+    <!-- <audio>元素已存在 -->
+    <audio id="myAudio" src="./family_tune.mp3" loop></audio> <!-- 建议添加 loop 属性让音乐循环播放 -->
     <div id="bg">
     <div id="title">
         <h1 align="center">Rusting</h1>
@@ -51,7 +52,30 @@
 
 <script>
     var myAudio = document.getElementById("myAudio");
-  
+    
+    // 1. 读取音量设置并应用
+    var storedVolume = localStorage.getItem('volume');
+    // 将存储的 0-100 值转换为 <audio> 元素所需的 0.0 - 1.0 值
+    if (storedVolume !== null) {
+        // 如果存储了值，则使用它
+        myAudio.volume = parseFloat(storedVolume) / 100;
+    } else {
+        // 如果没有存储值（第一次访问），使用默认值，例如设置页面中的默认值 50
+        myAudio.volume = 50 / 100; // 0.5
+    }
+
+    // 2. 尝试自动播放音乐
+    // 注意: 现代浏览器通常会阻止没有用户交互的自动播放，
+    // 但我们会尝试播放，如果失败（如控制台所示），则需要用户手动点击。
+    // 为了满足“没有音乐，要手动点击音乐开关才有声音”的反馈，我们把自动播放放在这里。
+    window.onload = function() {
+        // 尝试播放。如果浏览器阻止，它会返回一个 Promise 并在 catch 中处理。
+        myAudio.play().catch(error => {
+            console.log("Autoplay was prevented by the browser:", error.name);
+            // 这里可以添加逻辑来提示用户手动点击播放按钮
+        });
+    };
+
     function togglePlay() {
       return myAudio.paused ? myAudio.play() : myAudio.pause();
     }
