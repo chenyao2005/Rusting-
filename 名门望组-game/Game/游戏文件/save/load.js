@@ -2561,64 +2561,112 @@ var dialogues = [
         next: 600,// 跳转到结尾
     },
 ];
-var slot1=localStorage.getItem("slot1");
-var slot2=localStorage.getItem("slot2");
-var slot3=localStorage.getItem("slot3");
 function loadGame1(){
-    if(slot1){
-    localStorage.setItem("CD", localStorage.getItem("slot1"));
-    location.href = "../对话/dialogue.html";
-    }else{
-        alert("没有存档");
+    const slot1 = localStorage.getItem("slot1");
+    if(slot1 && slot1.trim() !== ""){
+        const id = parseInt(slot1);
+        if(!isNaN(id) && dialogues[id] !== undefined){
+            localStorage.setItem("CD", slot1);
+            location.href = "../对话/dialogue.html";
+            return;
+        }
     }
+    alert("存档数据无效");
 }
+
 function loadGame2(){
-    if(slot2){
-        localStorage.setItem("CD", localStorage.getItem("slot2"));
-        location.href = "../对话/dialogue.html";
-        }else{
-            alert("没有存档");
+    const slot2 = localStorage.getItem("slot2");
+    if(slot2 && slot2.trim() !== ""){
+        const id = parseInt(slot2);
+        if(!isNaN(id) && dialogues[id] !== undefined){
+            localStorage.setItem("CD", slot2);
+            location.href = "../对话/dialogue.html";
+            return;
         }
-}
-function loadGame3(){
-    if(slot3){
-        localStorage.setItem("CD", localStorage.getItem("slot3"));
-        location.href = "../对话/dialogue.html";
-        }else{
-            alert("没有存档");
-        }
-}
-
-
-function showMessage(){
-    if(slot1){
-    document.getElementById("save1img").style.display="inline-block";
-    document.getElementById("save1img").src=dialogues[slot1].background;
-    document.getElementById("save1text").innerHTML=dialogues[slot1].text;
-    }else{
-        document.getElementById("save1img").style.display="none";
-        document.getElementById("save1text").innerHTML="EMPTY";
     }
-    if(slot2){
-        document.getElementById("save2img").style.display="inline-block";
-        document.getElementById("save2img").src=dialogues[slot2].background;
-        document.getElementById("save2text").innerHTML=dialogues[slot2].text;
-        }else{
-            document.getElementById("save2img").style.display="none";
-            document.getElementById("save2text").innerHTML="EMPTY";
+    alert("存档数据无效");
+}
+
+function loadGame3(){
+    const slot3 = localStorage.getItem("slot3");
+    if(slot3 && slot3.trim() !== ""){
+        const id = parseInt(slot3);
+        if(!isNaN(id) && dialogues[id] !== undefined){
+            localStorage.setItem("CD", slot3);
+            location.href = "../对话/dialogue.html";
+            return;
         }
-    if(slot3){
-        document.getElementById("save3img").style.display="inline-block";
-        document.getElementById("save3img").src=dialogues[slot3].background;
-        document.getElementById("save3text").innerHTML=dialogues[slot3].text;
-        }else{
-            document.getElementById("save3img").style.display="none";
-            document.getElementById("save3text").innerHTML="EMPTY";
+    }
+    alert("存档数据无效");
+}
+function showMessage(){
+    var slot1=localStorage.getItem("slot1");
+    var slot2=localStorage.getItem("slot2");
+    var slot3=localStorage.getItem("slot3");
+    
+    var save1img = document.getElementById("save1img");
+    var save1text = document.getElementById("save1text");
+    var save2img = document.getElementById("save2img");
+    var save2text = document.getElementById("save2text");
+    var save3img = document.getElementById("save3img");
+    var save3text = document.getElementById("save3text");
+    
+    // 先重置所有元素
+    [save1img, save2img, save3img].forEach(img => {
+        img.style.display = "none";
+        img.src = "";
+    });
+    
+    [save1text, save2text, save3text].forEach(text => {
+        text.innerHTML = "EMPTY";
+    });
+    
+    // 处理存档1
+    if(slot1 && slot1.trim() !== ""){
+        var id1 = parseInt(slot1);
+        if(!isNaN(id1) && dialogues[id1] !== undefined){
+            save1img.style.display = "inline-block";
+            save1img.src = dialogues[id1].background;
+            save1text.innerHTML = dialogues[id1].text;
         }
-} 
+    }
+    
+    // 处理存档2
+    if(slot2 && slot2.trim() !== ""){
+        var id2 = parseInt(slot2);
+        if(!isNaN(id2) && dialogues[id2] !== undefined){
+            save2img.style.display = "inline-block";
+            save2img.src = dialogues[id2].background;
+            save2text.innerHTML = dialogues[id2].text;
+        }
+    }
+    
+    // 处理存档3
+    if(slot3 && slot3.trim() !== ""){
+        var id3 = parseInt(slot3);
+        if(!isNaN(id3) && dialogues[id3] !== undefined){
+            save3img.style.display = "inline-block";
+            save3img.src = dialogues[id3].background;
+            save3text.innerHTML = dialogues[id3].text;
+        }
+    }
+}
 function initGame() {
     showMessage();
 }
-window.addEventListener("load", function () {
-    initGame();
-});
+
+if (typeof window !== 'undefined') {
+    window.addEventListener("load", function () {
+        initGame();
+    });
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { 
+    loadGame1, 
+    loadGame2, 
+    loadGame3, 
+    showMessage,
+    initGame 
+  };
+}

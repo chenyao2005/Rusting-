@@ -2558,60 +2558,97 @@ var dialogues = [
         backlihui: "",
         background: "素材/背景/图片20.png",
         back: 274,
-        next: 600,// 跳转到结尾
+        next: 600,
     },
 ];
 var slot1=localStorage.getItem("slot1");
 var slot2=localStorage.getItem("slot2");
 var slot3=localStorage.getItem("slot3");
 function saveGame1(){
-    localStorage.setItem("slot1", localStorage.getItem("CD"));
-    alert("保存成功！");
-    location.reload();
+    const cd = localStorage.getItem("CD");
+
+    if (cd !== null) {
+        localStorage.setItem("slot1", cd);
+        alert("保存成功！");
+        location.reload();
+    } else {
+        alert("没有当前游戏进度可以保存");
+    }
 }
 function saveGame2(){
-    localStorage.setItem("slot2", localStorage.getItem("CD"));
-    alert("保存成功！");
-    location.reload();
+    const cd = localStorage.getItem("CD");
+    if (cd && cd.trim() !== "") {
+        localStorage.setItem("slot2", cd);
+        alert("保存成功！");
+        location.reload();
+    } else {
+        alert("没有当前游戏进度可以保存");
+    }
 }
+
 function saveGame3(){
-    localStorage.setItem("slot3", localStorage.getItem("CD"));
-    alert("保存成功！");
-    location.reload();
+    const cd = localStorage.getItem("CD");
+    if (cd && cd.trim() !== "") {
+        localStorage.setItem("slot3", cd);
+        alert("保存成功！");
+        location.reload();
+    } else {
+        alert("没有当前游戏进度可以保存");
+    }
 }
 function BackToGame(){
     location.href = "../对话/dialogue.html";
     currentDialogue = localStorage.getItem("CD");
 }
 function showMessage(){
-    if(slot1){
-    document.getElementById("save1img").style.display="inline-block";
-    document.getElementById("save1img").src=dialogues[slot1].background;
-    document.getElementById("save1text").innerHTML=dialogues[slot1].text;
+    var slot1=localStorage.getItem("slot1");
+    var slot2=localStorage.getItem("slot2");
+    var slot3=localStorage.getItem("slot3");
+    
+    if(slot1 && slot1.trim() !== "" && !isNaN(parseInt(slot1)) && dialogues[parseInt(slot1)]){
+        document.getElementById("save1img").style.display="inline-block";
+        document.getElementById("save1img").src=dialogues[parseInt(slot1)].background;
+        document.getElementById("save1text").innerHTML=dialogues[parseInt(slot1)].text;
     }else{
         document.getElementById("save1img").style.display="none";
         document.getElementById("save1text").innerHTML="EMPTY";
     }
-    if(slot2){
+    
+    if(slot2 && slot2.trim() !== "" && !isNaN(parseInt(slot2)) && dialogues[parseInt(slot2)]){
         document.getElementById("save2img").style.display="inline-block";
-        document.getElementById("save2img").src=dialogues[slot2].background;
-        document.getElementById("save2text").innerHTML=dialogues[slot2].text;
-        }else{
-            document.getElementById("save2img").style.display="none";
-            document.getElementById("save2text").innerHTML="EMPTY";
-        }
-    if(slot3){
+        document.getElementById("save2img").src=dialogues[parseInt(slot2)].background;
+        document.getElementById("save2text").innerHTML=dialogues[parseInt(slot2)].text;
+    }else{
+        document.getElementById("save2img").style.display="none";
+        document.getElementById("save2text").innerHTML="EMPTY";
+    }
+    
+    if(slot3 && slot3.trim() !== "" && !isNaN(parseInt(slot3)) && dialogues[parseInt(slot3)]){
         document.getElementById("save3img").style.display="inline-block";
-        document.getElementById("save3img").src=dialogues[slot3].background;
-        document.getElementById("save3text").innerHTML=dialogues[slot3].text;
-        }else{
-            document.getElementById("save3img").style.display="none";
-            document.getElementById("save3text").innerHTML="EMPTY";
-        }
-} 
+        document.getElementById("save3img").src=dialogues[parseInt(slot3)].background;
+        document.getElementById("save3text").innerHTML=dialogues[parseInt(slot3)].text;
+    }else{
+        document.getElementById("save3img").style.display="none";
+        document.getElementById("save3text").innerHTML="EMPTY";
+    }
+}
+
 function initGame() {
     showMessage();
 }
-window.addEventListener("load", function () {
-    initGame();
-});
+
+if (typeof window !== 'undefined') {
+    window.addEventListener("load", function () {
+        initGame();
+    });
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    saveGame1,
+    saveGame2,
+    saveGame3,
+    BackToGame,
+    showMessage,
+    initGame
+  };
+}
