@@ -1,3 +1,5 @@
+--- START OF FILE pintu.html ---
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -68,6 +70,7 @@
 
       let emptyPiece;
       let isShuffling = false;
+      let isPieceMoving = false; // 【新增】用于防止快速点击的标志位
 
       // 创建拼图块
       function createPuzzlePieces() {
@@ -93,7 +96,8 @@
               piece.classList.add("empty");
             } else {
               piece.addEventListener("click", () => {
-                if (!isShuffling) {
+                // 【修改】同时检查 isPieceMoving 标志位
+                if (!isShuffling && !isPieceMoving) {
                   movePiece(piece);
                 }
               });
@@ -107,6 +111,9 @@
 
       // 移动拼图块
       function movePiece(piece) {
+        // 【新增】如果正在移动中，直接返回，忽略这次点击
+        if (isPieceMoving) return;
+        
         const emptyPieceRow = parseInt(emptyPiece.dataset.row);
         const emptyPieceCol = parseInt(emptyPiece.dataset.col);
         const pieceRow = parseInt(piece.dataset.row);
@@ -118,6 +125,9 @@
           (pieceCol === emptyPieceCol &&
             Math.abs(pieceRow - emptyPieceRow) === 1)
         ) {
+          // 【新增】开始移动，设置标志位
+          isPieceMoving = true;
+          
           const tempRow = emptyPieceRow;
           const tempCol = emptyPieceCol;
           emptyPiece.style.top = `${pieceRow * piece.offsetHeight}px`;
@@ -129,9 +139,17 @@
           piece.style.left = `${tempCol * piece.offsetWidth}px`;
           piece.dataset.row = tempRow;
           piece.dataset.col = tempCol;
+          
+          // 【修改】移除立即调用的 checkWin()
+          // checkWin(); 
+          
+          // 【新增】使用 setTimeout 延迟执行 checkWin 和重置标志位
+          // 320ms 略长于 CSS transition 的 0.3s (300ms)
+          setTimeout(() => {
+              isPieceMoving = false; // 重置标志位，允许新的移动
+              checkWin();
+          }, 320); 
         }
-
-        checkWin();
       }
 
       let isWin = false; // 添加标志位
@@ -141,8 +159,16 @@
         let isPuzzleComplete = true;
         for (let i = 0; i < pieces.length; i++) {
           const piece = pieces[i];
+          
+          // 排除空块 (emptyPiece) 的检查
+          if (piece.classList.contains('empty')) {
+              continue; 
+          }
+          
           const row = parseInt(piece.dataset.row);
           const col = parseInt(piece.dataset.col);
+          
+          // 检查当前块的 (row, col) 是否与其初始位置 (基于 i / cols, i % cols) 匹配
           if (row !== Math.floor(i / cols) || col !== i % cols) {
             isPuzzleComplete = false;
             break;
@@ -167,7 +193,7 @@
         shuffleButton.disabled = true;
         isWin = false; // 重置标志位为false
 
-        const shuffleCount = 100;
+        const shuffleCount = 500;
         let count = 0;
 
         const intervalId = setInterval(() => {
@@ -188,3 +214,10 @@
     });
   </script>
 </html>
+
+--- START OF FILE pintu.js ---
+
+function skip(){
+    localStorage.setItem("CD", 76);
+	location.href="../对话/dialogue.html";
+}
