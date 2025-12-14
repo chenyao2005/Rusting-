@@ -1,3 +1,30 @@
+:root {
+    /* 主色调 - 白色系 */
+    --color-white: #FFFFFF;
+    --color-white-dim: rgba(255, 255, 255, 0.1);
+    --color-gray-light: #A1A1A1;
+    --color-gray-lighter: #D6D6D6;
+    --color-gray-medium: #666666; 
+    
+    /* 黑色系 */
+    --color-black: #000000;
+    --color-gray-dark: #2C2C2C;
+    --color-gray-darker: #1A1A1A;
+    --color-gray-darkest: #111111;
+    
+    /* 特殊颜色 */
+    --color-accent-blue: rgba(38, 0, 255, 0.4);
+    --color-accent-green: #44D8A4;
+    --color-accent-teal: #568FA6;
+    
+    /* 背景色 */
+    --color-bg-dark: rgba(26, 26, 26, 0.5);
+    --color-bg-darker: rgba(41, 41, 41, 0.5);
+
+    --color-glow-white: rgba(255, 255, 255, 0.25);
+    --color-glow-transparent: rgba(255, 255, 255, 0);
+}
+
 @media (max-width:1000px) {
     div #images {
         width: 100%;
@@ -18,7 +45,7 @@
     }
     div.desc {
         text-align: center;
-        font: 12px ;
+        font: 12px "哥特黑白无常", sans-serif;
         width: 200px;
         margin: 10px 5px 10px 5px;
     }
@@ -26,7 +53,7 @@
   }
 
 @font-face {
-    font-family: "哥特黑白无常";
+    font-family: "哥特黑白无常", sans-serif;
     src: url(哥特黑白无常.ttf);
 }
 #content {
@@ -54,9 +81,9 @@ p.text {
     line-height: 1.75;
     font-size:24px;
     left:20%;
-    color:white;
-    -webkit-text-stroke: 0.3px #000000;
-    font-family: "哥特黑白无常";
+    color: var(--color-white);
+    -webkit-text-stroke: 0.3px var(--color-black);
+    font-family: "哥特黑白无常", sans-serif;
     overflow: auto;
     user-select: none;
     top: 15px;
@@ -65,9 +92,9 @@ h1.name{
     position: absolute;
     bottom: 85%;
     left:18%;
-    color:white;
-    -webkit-text-stroke: 0.3px #000000;
-    font-family: "哥特黑白无常";
+    color: var(--color-white); 
+    -webkit-text-stroke: 0.3px var(--color-black); 
+    font-family: "哥特黑白无常", sans-serif;
     user-select: none;
 }
 img.saylihui{
@@ -94,18 +121,18 @@ img.backlihui{
     bottom:10px;
     right:10%;
     font-size: 20px;
-    color: #ffffff;
-    -webkit-text-stroke: 0.3px #000000;
-    font-family: "哥特黑白无常";
+    color: var(--color-white);
+    -webkit-text-stroke: 0.3px var(--color-black); 
+    font-family: "哥特黑白无常", sans-serif;
 }
 #back{
     position: absolute;
     bottom:0;
     right:15%;
     font-size: 20px;
-    color: #ffffff;
-    -webkit-text-stroke: 0.3px #000000;
-    font-family: "哥特黑白无常";
+    color: var(--color-white);
+    -webkit-text-stroke: 0.3px var(--color-black); 
+    font-family: "哥特黑白无常", sans-serif;
 }
 
 .button {  
@@ -120,9 +147,9 @@ img.backlihui{
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 15px 30px;  
-    border: 2px solid #2c2c2c;   
-    background-color: rgba(26, 26, 26, 0.5); /* 80%的不透明度 */  
-    color: #ffffff;  
+    border: 2px solid var(--color-gray-dark);
+    background-color: var(--color-bg-dark);
+    color: var(--color-white);
     font-size: 30px;  
     border-radius: 30px;  
     transition: all 0.4s ease;  
@@ -141,8 +168,8 @@ img.backlihui{
     height: 100%;  
     background: radial-gradient(  
       circle,  
-      rgba(255, 255, 255, 0.25) 0%,  
-      rgba(255, 255, 255, 0) 70%  
+      var(--color-glow-white) 0%,  
+      var(--color-glow-transparent) 70%  
     );  
     transform: scale(0);  
     transition: transform 0.5s ease;  
@@ -153,9 +180,8 @@ img.backlihui{
 }  
   
 .button:hover {  
-    border-color: #666666;  
-    /* 在悬停时也可以调整背景色的透明度，但这里保持不变或根据需求调整 */  
-    background: rgba(41, 41, 41, 0.5); /* 示例中保持与初始透明度相同 */  
+    border-color: var(--color-gray-medium);
+    background: var(--color-bg-darker); 
 }
 
 #video {

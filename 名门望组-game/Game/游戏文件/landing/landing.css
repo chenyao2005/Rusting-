@@ -1,12 +1,20 @@
+:root {
+    --color-white: #FFFFFF;
+    --color-white-dim: rgba(255, 255, 255, 0.1);
+    --color-black: #000000;
+    --color-shadow-dark: rgba(0, 0, 0, 1);
+    --color-shadow-light: rgba(255, 255, 255, 0.4);
+}
+
 @font-face {
-    font-family: "哥特黑白无常";
+    font-family: "哥特黑白无常", sans-serif;
     src: url(./哥特黑白无常.ttf);
 }
 
 body {
     background-image: url(../homepage/picture_home/desk.jpg);
     background-size: cover;
-    font-family: "哥特黑白无常";
+    font-family: "哥特黑白无常", sans-serif;
 }
 
 .container {
@@ -18,57 +26,60 @@ body {
     margin: 0 auto;
     width: 300px;
     height: 450px;
-    color: white;
-  }
+    color: var(--color-white);
+}
   
-  .container .label {
+.container .label {
     font-size: 32px;
     padding-left: 10px;
     position: absolute;
     top: 13px;
     transition: 0.3s;
     pointer-events: none;
-  }
+}
   
-  .input {
+.input {
     width: 300px;
     height: 60px;
     border: none;
     outline: none;
     padding: 0px 7px;
     border-radius: 6px;
-    color: #fff;
+    color: var(--color-white);
     font-size: 30px;
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+}
   
-  .input:focus {
+.input:focus {
     border: 2px solid transparent;
-    color: #fff;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    color: var(--color-white);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
   
-  .container .input:valid ~ .label,
-  .container .input:focus ~ .label {
+.container .input:valid ~ .label,
+.container .input:focus ~ .label {
     transition: 0.3s;
     padding-left: 2px;
     transform: translateY(-50px);
-  }
+}
   
-  .container .input:valid,
-  .container .input:focus {
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+.container .input:valid,
+.container .input:focus {
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
 
-  .password {
+.password {
     display: flex;
     flex-direction: column;
     gap: 7px;
@@ -77,57 +88,60 @@ body {
     margin: 0 auto;
     width: 300px;
     height: 450px;
-    color: white;
-  }
+    color: var(--color-white);
+}
   
-  .password .label2 {
+.password .label2 {
     font-size: 32px;
     padding-left: 10px;
     position: absolute;
     top: 13px;
     transition: 0.3s;
     pointer-events: none;
-  }
+}
   
-  .input2 {
+.input2 {
     width: 300px;
     height: 60px;
     border: none;
     outline: none;
     padding: 0px 7px;
     border-radius: 6px;
-    color: #fff;
+    color: var(--color-white);
     font-size: 30px;
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+}
   
-  .input2:focus {
+.input2:focus {
     border: 2px solid transparent;
-    color: #fff;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    color: var(--color-white);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
   
-  .password .input2:valid ~ .label2,
-  .password .input2:focus ~ .label2 {
+.password .input2:valid ~ .label2,
+.password .input2:focus ~ .label2 {
     transition: 0.3s;
     padding-left: 2px;
     transform: translateY(-50px);
-  }
+}
   
-  .password .input2:valid,
-  .password .input2:focus {
-    box-shradow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+.password .input2:valid,
+.password .input2:focus {
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
 
-  .login-button {
+.login-button {
     display: block;
     position: relative;
     margin: auto;
@@ -137,50 +151,54 @@ body {
     border: none;
     outline: none;
     border-radius: 6px;
-    color: #fff;
+    color: var(--color-white);
     font-size: 30px;
-    font-family: "哥特黑白无常";
+    font-family: "哥特黑白无常", sans-serif;
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
     cursor: pointer;
     transition: 0.3s;
 }
 
 .login-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--color-white-dim);
 }
 
 .login-button:active {
-    box-shadow: inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
 }
 
 .newcount-button {
-  display: block;
-  position: relative;
-  margin: auto;
-  top: -345px;
-  width: 300px;
-  height: 60px;
-  border: none;
-  outline: none;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 30px;
-  font-family: "哥特黑白无常";
-  background-color: transparent;
-  box-shadow: 3px 3px 10px rgba(0,0,0,1),
-  -1px -1px 6px rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: 0.3s;
+    display: block;
+    position: relative;
+    margin: auto;
+    top: -345px;
+    width: 300px;
+    height: 60px;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    color: var(--color-white);
+    font-size: 30px;
+    font-family: "哥特黑白无常", sans-serif;
+    background-color: transparent;
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .newcount-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--color-white-dim);
 }
 
 .newcount-button:active {
-  box-shadow: inset 3px 3px 10px rgba(0,0,0,1),
-  inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
 }
