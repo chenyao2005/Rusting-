@@ -45,7 +45,7 @@
     }
     div.desc {
         text-align: center;
-        font: 12px "哥特黑白无常", sans-serif;
+        font: 12px "哥特黑白无常";
         width: 200px;
         margin: 10px 5px 10px 5px;
     }
@@ -53,7 +53,7 @@
   }
 
 @font-face {
-    font-family: "哥特黑白无常", sans-serif;
+    font-family: "哥特黑白无常";
     src: url(哥特黑白无常.ttf);
 }
 #content {
@@ -83,7 +83,7 @@ p.text {
     left:20%;
     color: var(--color-white);
     -webkit-text-stroke: 0.3px var(--color-black);
-    font-family: "哥特黑白无常", sans-serif;
+    font-family: "哥特黑白无常";
     overflow: auto;
     user-select: none;
     top: 15px;
@@ -94,7 +94,7 @@ h1.name{
     left:18%;
     color: var(--color-white); 
     -webkit-text-stroke: 0.3px var(--color-black); 
-    font-family: "哥特黑白无常", sans-serif;
+    font-family: "哥特黑白无常";
     user-select: none;
 }
 img.saylihui{
@@ -123,7 +123,7 @@ img.backlihui{
     font-size: 20px;
     color: var(--color-white);
     -webkit-text-stroke: 0.3px var(--color-black); 
-    font-family: "哥特黑白无常", sans-serif;
+    font-family: "哥特黑白无常";
 }
 #back{
     position: absolute;
@@ -132,7 +132,7 @@ img.backlihui{
     font-size: 20px;
     color: var(--color-white);
     -webkit-text-stroke: 0.3px var(--color-black); 
-    font-family: "哥特黑白无常", sans-serif;
+    font-family: "哥特黑白无常";
 }
 
 .button {  
