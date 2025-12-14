@@ -1,38 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing</title>
+    <title>登录页面</title>
     <link rel="stylesheet" href="landing.css">
     <script src="landing.js"></script>
 </head>
 <body>
 <div class="container">
-  <input required="" type="text" name="username" class="input">
-  <label class="label">Username</label>
+  <input required="" type="text" name="username" class="input" id="username" maxlength="20">
+  <label class="label">用户名</label>
+  <div class="error-message" id="username-error" style="color: #ff6b6b; font-size: 14px; margin-top: 5px; display: none;"></div>
 </div>
 <div class="password">
-    <input required="" type="password" name="password" class="input2">
-    <label class="label2">Password</label>
+    <input required="" type="password" name="password" class="input2" id="password" maxlength="30">
+    <label class="label2">密码</label>
+    <div class="error-message" id="password-error" style="color: #ff6b6b; font-size: 14px; margin-top: 5px; display: none;"></div>
 </div>
-<button class="login-button" onclick="login()">Login</button>
-<button class="newcount-button" onclick="window.location.href='../newcount/newcount.html'">NewCount</button>
+<button class="login-button" onclick="validateAndLogin()">登录</button>
+<button class="newcount-button" onclick="window.location.href='../newcount/newcount.html'">创建新账户</button>
 
 <script>
+    // 输入验证函数
+    function validateInput(input, type) {
+        let value = input.value.trim();
+        let errorElement = document.getElementById(`${type}-error`);
+        
+        // 基本的XSS防护：移除危险字符
+        value = value.replace(/[<>'"&\\\/]/g, '');
+        input.value = value;
+        
+        // 用户名验证规则
+        if (type === 'username') {
+            // 只允许字母、数字、下划线、汉字，长度3-20
+            const usernameRegex = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,20}$/;
+            
+            if (value.length < 3) {
+                errorElement.textContent = '用户名至少需要3个字符';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            if (!usernameRegex.test(value)) {
+                errorElement.textContent = '用户名只能包含字母、数字、下划线和汉字';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        // 密码验证规则
+        if (type === 'password') {
+            // 密码长度至少6位
+            if (value.length < 6) {
+                errorElement.textContent = '密码至少需要6个字符';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            // 检查是否包含危险字符
+            const dangerousChars = /[<>'"&\\\/]/;
+            if (dangerousChars.test(value)) {
+                errorElement.textContent = '密码包含无效字符';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            return true;
+        }
+        
+        return true;
+    }
+    
+    // 登录前验证
+    function validateAndLogin() {
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        
+        const isUsernameValid = validateInput(usernameInput, 'username');
+        const isPasswordValid = validateInput(passwordInput, 'password');
+        
+        if (!isUsernameValid || !isPasswordValid) {
+            return false;
+        }
+        
+        // 如果验证通过，执行登录
+        login();
+    }
+    
+    // 实时输入验证
+    document.getElementById('username').addEventListener('input', function() {
+        validateInput(this, 'username');
+    });
+    
+    document.getElementById('password').addEventListener('input', function() {
+        validateInput(this, 'password');
+    });
+    
+    // 原有登录函数
     function login() {
-        const inputUsername = document.querySelector('input[name="username"]').value;
-        const inputPassword = document.querySelector('input[name="password"]').value;
+        const inputUsername = document.getElementById('username').value;
+        const inputPassword = document.getElementById('password').value;
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const userFound = users.some(user => user.username === inputUsername && user.password === inputPassword);
+        
         if (userFound) {
-            alert('successfully logged in');
+            alert('登录成功');
             localStorage.setItem("CD", 0);
+            // 存储当前用户信息（可选）
+            localStorage.setItem("currentUser", JSON.stringify({
+                username: inputUsername,
+                loginTime: new Date().toISOString()
+            }));
             location.href = "../homepage/home.html";
         } else {
-            alert('Invalid username or password');
+            alert('用户名或密码错误');
         }
     }
+    
+    // 阻止表单提交（如果未来添加form标签）
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                validateAndLogin();
+            });
+        }
+    });
 </script>
 </body>
 </html>

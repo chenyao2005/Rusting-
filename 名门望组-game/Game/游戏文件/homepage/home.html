@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,17 +33,17 @@
     </div>
     <br>
     <div class="buttons">
-        <button onclick="toStart()">Start</button>
+        <button onclick="toStart()">开始游戏</button>
         <br>
-        <button onclick="toContinue()">continue</button>
+        <button onclick="toContinue()">继续游戏</button>
         <br>         
-        <button onclick="window.location.href='../save/load.html'">Load Game</button>
+        <button onclick="window.location.href='../save/load.html'">读取存档</button>
         <br>
-        <button onclick="window.location.href='./setting.html'">Setting</button>
+        <button onclick="window.location.href='./setting.html'">设置</button>
         <br>
-        <button onclick="window.location.href='../group/group.html'">Group</button>
+        <button onclick="window.location.href='../group/group.html'">制作组</button>
         <br>
-        <button onclick="togglePlay()" id="music"><img src="./picture_home/music.png" alt=""></button>
+        <button onclick="togglePlay()" id="music"><img src="./picture_home/music.png" alt="音乐开关"></button>
     </div>
 </div>
 </body>
@@ -67,11 +67,11 @@
     // 2. 尝试自动播放音乐
     // 注意: 现代浏览器通常会阻止没有用户交互的自动播放，
     // 但我们会尝试播放，如果失败（如控制台所示），则需要用户手动点击。
-    // 为了满足“没有音乐，要手动点击音乐开关才有声音”的反馈，我们把自动播放放在这里。
+    // 为了满足"没有音乐，要手动点击音乐开关才有声音"的反馈，我们把自动播放放在这里。
     window.onload = function() {
         // 尝试播放。如果浏览器阻止，它会返回一个 Promise 并在 catch 中处理。
         myAudio.play().catch(error => {
-            console.log("Autoplay was prevented by the browser:", error.name);
+            console.log("自动播放被浏览器阻止:", error.name);
             // 这里可以添加逻辑来提示用户手动点击播放按钮
         });
     };
