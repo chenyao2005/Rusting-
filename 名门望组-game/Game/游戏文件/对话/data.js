@@ -2618,6 +2618,11 @@ var dialogues = [
     },
 ];
 
+// 获取原始存储值
+var slot1 = localStorage.getItem("slot1");
+var slot2 = localStorage.getItem("slot2");
+var slot3 = localStorage.getItem("slot3");
+
 // MODIFICATION 1: 确保 currentDialogue 和其他 localStorage 值是整数
 var currentDialogue = parseInt(localStorage.getItem("CD")) || 0;
 var textFullyShown = false;
@@ -2666,10 +2671,18 @@ function showMessage() {
 
     let index = 0;
     let text = dialogues[currentDialogue].text;
+    
+    // 清除可能存在的旧 interval
+    if (interval) clearInterval(interval);
+
     interval = setInterval(function() {
-        document.getElementById("text").innerHTML += text[index];
-        index++;
-        if (index >= text.length) {
+        // 防止 index 越界或 text 为 undefined
+        if (text && index < text.length) {
+            document.getElementById("text").innerHTML += text[index];
+            index++;
+        }
+        
+        if (!text || index >= text.length) {
             clearInterval(interval);
             textFullyShown = true;
             CheckCG();
@@ -2679,7 +2692,6 @@ function showMessage() {
 }
 
 function showOptions() {
-// ... (showOptions function is the same)
     if (dialogues[currentDialogue].option) {
         switch (dialogues[currentDialogue].option.length) {
             case 2:
@@ -2689,12 +2701,14 @@ function showOptions() {
                 document.getElementById("button2").style.top = "50%";
                 document.getElementById("button1").innerHTML = dialogues[currentDialogue].option[0].text;
                 document.getElementById("button2").innerHTML = dialogues[currentDialogue].option[1].text;
-                document.getElementById("button1").onclick = function () {
+                document.getElementById("button1").onclick = function (e) {
+                    e.stopPropagation(); // 防止冒泡触发 document 点击
                     selectedOption = 0;
                     getNextDialogue(selectedOption);
                     showMessage();
                 };
-                document.getElementById("button2").onclick = function () {
+                document.getElementById("button2").onclick = function (e) {
+                    e.stopPropagation();
                     selectedOption = 1;
                     getNextDialogue(selectedOption);
                     showMessage();
@@ -2705,7 +2719,8 @@ function showOptions() {
                 document.getElementById("button1").style.top = "40%";
                 document.getElementById("button1").innerHTML = dialogues[currentDialogue].option[0].text;
                 document.getElementById("button2").style.display = "none";
-                document.getElementById("button1").onclick = function () {
+                document.getElementById("button1").onclick = function (e) {
+                    e.stopPropagation();
                     selectedOption = 0;
                     getNextDialogue(selectedOption);
                     showMessage();
@@ -2720,16 +2735,19 @@ function showOptions() {
 
 function getNextDialogue(selectedOption) {
     if (dialogues[currentDialogue].option) {
-        currentDialogue = dialogues[currentDialogue].option[selectedOption].next;
+        // 确保 selectedOption 有效
+        if (selectedOption !== undefined && selectedOption !== -1) {
+             currentDialogue = dialogues[currentDialogue].option[selectedOption].next;
+        }
     } else {
         currentDialogue = dialogues[currentDialogue].next;
     }
 }
+
 // MODIFICATION 2: 改进 getBack()，加入更严格的边界检查
 function getBack() {
     // 1. 检查当前 ID 是否有效，防止访问 dialogues[undefined]
     if (dialogues[currentDialogue] === undefined) {
-        // 如果当前状态已损坏，无法后退，直接停止
         console.error("当前对话ID无效，无法后退: " + currentDialogue);
         return; 
     }
@@ -2753,22 +2771,47 @@ function getBack() {
     showMessage();
 }
 
-document.addEventListener('click', function() {
+// 封装推进对话的核心逻辑
+function advanceDialogue() {
     if (textFullyShown) {
+        // 如果有选项，必须点击选项按钮，不能通过点击背景或按空格跳过
         if (dialogues[currentDialogue].option) {
             return;
         }
         getNextDialogue();
         showMessage();
     } else {
+        // 立即显示全部文本
         clearInterval(interval);
         document.getElementById("text").innerHTML = dialogues[currentDialogue].text;
         textFullyShown = true;
         CheckCG();
         showOptions();
     }
+}
+
+document.addEventListener('click', function(e) {
+    // 如果点击的是特定的功能按钮（如设置、保存等），不应该触发对话推进
+    // 简单的判断方法是检查 e.target 是否在 .setting 区域内
+    if (e.target.closest('.setting') || e.target.closest('.button')) {
+        return;
+    }
+    advanceDialogue();
 });
+
+// 新增：键盘事件监听 (空格键推进)
+document.addEventListener('keydown', function(e) {
+    // keyCode 32 是空格键, 'Space' 是现代标准
+    if (e.code === 'Space' || e.keyCode === 32) {
+        // 防止空格键触发页面滚动等默认行为
+        e.preventDefault(); 
+        advanceDialogue();
+    }
+});
+
 function CheckCG(){
+    if(!dialogues[currentDialogue]) return; // 安全检查
+
     if(dialogues[currentDialogue].next==300){//坏结局
         location.href = "../video/死亡.html";
     }
@@ -2815,8 +2858,6 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         dialogues,
         CheckCG,
-        // 如果 currentDialogue 是全局变量，建议封装成 getter/setter 或直接导出对象以便测试修改
-        // 这里假设你可以直接导出或在测试中访问
         getCurrentDialogue: () => typeof currentDialogue !== 'undefined' ? currentDialogue : 0, 
         setCurrentDialogue: (val) => { currentDialogue = val },
         // 导出其他可能的辅助函数
