@@ -10,20 +10,26 @@
 <body>
     <style>
         @media screen and (max-width: 1000px) {
-            #text{
-                text-overflow:ellipsis;
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;  
-                line-clamp:3;
-                -webkit-box-orient: vertical;
+            /* 修复文字截断问题 */
+            #text {
+                /* 移除之前的 line-clamp (行数限制) */
+                display: block; 
+                /* 允许垂直方向滚动 */
+                overflow-y: auto; 
+                /* 确保文字不会溢出容器 */
+                height: 80%; 
+                /* 移动端字体调小，提高可读性 */
+                font-size: 16px !important; 
+                line-height: 1.5 !important;
             }
-            }
-            .saylihui{
-                transform: translate(0, -200px);
-                width:30%;
+            
+            /* 调整立绘位置，避免遮挡文字 */
+            .saylihui {
+                transform: translate(0, -150px); /* 稍微调整位置 */
+                width: 30%;
                 height: auto;
             }
+        }
     </style>
     <!-- 使用透明像素占位，等待JS加载真实图片 -->
     <img id="background" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
@@ -31,7 +37,7 @@
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="lihui" class="saylihui" id="saylihui">
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="lihui" class="backlihui" id="backlihui">
         <h1 class="name" id="name"></h1>    
-        <p  class="text" id="text"></p>
+        <p class="text" id="text"></p>
         <p class="setting"><a onclick="getBack()" style="cursor: pointer;">上一页</a>&nbsp;&nbsp;<a onclick="save()" style="cursor: pointer;">保存</a> &nbsp;&nbsp;<a onclick="toSetting()" style="cursor: pointer;">设置</a> &nbsp;&nbsp;<a href="..\homepage\home.html" style="text-decoration: none;color: #ffffff;
     -webkit-text-stroke: 0.3px #000000;" onclick="toHome()">主菜单</a></p>
     </div>        

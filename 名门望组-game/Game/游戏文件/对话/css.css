@@ -50,6 +50,20 @@
         margin: 10px 5px 10px 5px;
     }
     #main{height: auto;}
+
+    /* 新增：移动端对话框样式优化 */
+    p.text {
+        left: 5% !important;      /* 减少左边距，利用屏幕宽度 */
+        max-width: 90% !important; /* 增加最大宽度 */
+        font-size: 16px !important; /* 强制减小字体 */
+        top: 10px !important;
+        height: 70% !important; /* 限制高度以触发滚动 */
+    }
+    h1.name {
+        left: 5% !important; /* 名字也相应左移 */
+        bottom: 82% !important;
+        font-size: 18px !important;
+    }
   }
 
 @font-face {
@@ -92,6 +106,8 @@ p.text {
     overflow: auto;
     user-select: none;
     top: 15px;
+    /* 增加高度限制，确保PC端文字过多时也能滚动，而不是溢出到屏幕外 */
+    max-height: 75%; 
 }
 h1.name{
     position: absolute;
