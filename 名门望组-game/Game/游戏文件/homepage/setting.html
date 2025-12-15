@@ -6,110 +6,189 @@
     <title>setting</title>
     <link rel="stylesheet" href="home.css">
     <style>
-        @media (max-width:1000px){
-            .setting-div{
-                 width: 90%;
-                 height: 90%;
-                 top: 5%;
-                 left: 5%;
-            }
-            .setting-item input[type="range"] {
-            width: 50%;
-            position: absolute;
-            transform: translate(-320px,100px);
-            left: 100px;
-        }
-            .setting-item output {
-            font-family: "哥特黑白无常";
-            font-size: 40px;
-            position: absolute;
-            transform: translate(-800px,100px);
-        }
-
-        }
         body {
             background-image: url(./picture_home/desk.jpg);
-            font-family: "哥特黑白无常";
+            background-size: cover;
+            background-position: center;
+            font-family: "哥特黑白无常", sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
         }
+        
+        /* 使用 Flexbox 布局替代绝对定位，确保响应式效果 */
         .setting-div {
-            background-color: white;
-            opacity: 0.4;
+            background-color: rgba(255, 255, 255, 0.4); /* 使用 rgba 代替 opacity，防止文字变透明 */
             position: absolute;
-            top: 20px;
-            left: 50px;
-            bottom:20px;
-            right: 50px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1000px;
+            height: 80%;
             border-radius: 20px;
-            padding: 20px;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* 防止内容溢出不可见 */
         }
+
         .setting-div h1 {
             font-family: "哥特黑白无常";
             text-align: center;
             font-size: 50px;
+            margin-top: 0;
+            margin-bottom: 40px;
+            flex-shrink: 0;
         }
+
+        .setting-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
         .setting-item {
             display: flex;
             align-items: center;
-            margin-bottom: 100px;
-            margin-top:100px;
+            justify-content: center;
+            margin-bottom: 50px;
+            width: 100%;
         }
+
         .setting-item h2 {
             font-family: "哥特黑白无常";
-            font-size: 40px;
-            max-width: 300px;
-            position:relative;
-            left:100px;
+            font-size: 36px;
+            margin: 0;
+            width: 300px;
+            text-align: right;
+            margin-right: 20px;
         }
+
         .setting-item input[type="range"] {
-            width: 50%;
-            position: absolute;
-            left: 400px;
+            width: 40%;
+            max-width: 400px;
+            cursor: pointer;
         }
+
         .setting-item output {
             font-family: "哥特黑白无常";
-            font-size: 40px;
-            position: absolute;
-            left: 1100px;
+            font-size: 36px;
+            width: 80px;
+            margin-left: 20px;
+            text-align: left;
+        }
+
+        .back-btn {
+            /* 桌面端定位 */
+            position: absolute; 
+            bottom: 40px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            margin: 0;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 1000px) {
+            .setting-div {
+                 width: 90%;
+                 height: auto;
+                 max-height: 90%;
+                 padding: 20px;
+            }
+
+            .setting-div h1 {
+                font-size: 32px;
+                margin-bottom: 20px;
+            }
+
+            .setting-item {
+                flex-direction: column;
+                margin-bottom: 30px;
+            }
+
+            .setting-item h2 {
+                font-size: 24px;
+                width: 100%;
+                text-align: center;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .setting-item input[type="range"] {
+                width: 80%;
+                margin-bottom: 10px;
+            }
+
+            .setting-item output {
+                font-size: 24px;
+                width: 100%;
+                text-align: center;
+                margin-left: 0;
+            }
+            
+            .back-btn {
+                /* 移动端取消绝对定位，改用流式布局 */
+                position: static;
+                transform: none;
+                margin: 20px auto 0;
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
     <div class="bg">
-    <div class="setting-div">
-        <h1>设置</h1>
-        <div class="setting-item">
-            <h2>背景音量大小</h2>
-            <input type="range" min="0" max="100" value="0" id="volume">
-            <output for="volume" id="volume-output"></output>
+        <div class="setting-div">
+            <h1>设置</h1>
+            <div class="setting-content">
+                <div class="setting-item">
+                    <h2>背景音量大小</h2>
+                    <input type="range" min="0" max="100" value="0" id="volume">
+                    <output for="volume" id="volume-output"></output>
+                </div>
+                <div class="setting-item">
+                    <h2>文本显示速度</h2>
+                    <input type="range" min="0" max="100" value="0" id="text-speed">
+                    <output for="text-speed" id="text-speed-output">50</output>
+                </div>
+            </div>
+            
+            <button class="back-btn"><a onclick="getBack()">Back</a></button>
         </div>
-        <div class="setting-item">
-            <h2>文本显示速度</h2>
-            <input type="range" min="0" max="100" value="0" id="text-speed">
-            <output for="text-speed" id="text-speed-output">50</output>
-        </div>
-        </div>
-        <button style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);"><a onclick="getBack()">Back</a></button>
     </div>
     <script>
         var volume = localStorage.getItem('volume') || 50;
         var textSpeed = localStorage.getItem('textSpeed') || 50;
+        
         function initializeOutput() {
-            document.getElementById('volume').value = volume;
-            document.getElementById('volume-output').value = volume;
-            document.getElementById('text-speed').value = textSpeed;
-            document.getElementById('text-speed-output').value = textSpeed;
+            var volInput = document.getElementById('volume');
+            var volOutput = document.getElementById('volume-output');
+            var speedInput = document.getElementById('text-speed');
+            var speedOutput = document.getElementById('text-speed-output');
+
+            if (volInput) volInput.value = volume;
+            if (volOutput) volOutput.value = volume;
+            if (speedInput) speedInput.value = textSpeed;
+            if (speedOutput) speedOutput.value = textSpeed;
         }
-        window.onload = initializeOutput();
+        
+        // 修复：正确绑定 onload 事件，而不是立即执行
+        window.onload = initializeOutput;
+        
         function updateOutput(input, output) {
-            input.addEventListener('input', function() {
-                output.value = input.value;
-            });
+            if (input && output) {
+                input.addEventListener('input', function() {
+                    output.value = input.value;
+                });
+            }
         }
+        
         updateOutput(document.getElementById('volume'), document.getElementById('volume-output'));
         updateOutput(document.getElementById('text-speed'), document.getElementById('text-speed-output'));
-        updateOutput(document.getElementById('fast-forward'), document.getElementById('fast-forward-output'));
-        updateOutput(document.getElementById('auto-mode'), document.getElementById('auto-mode-output'));
-        updateOutput(document.getElementById('text-color'), document.getElementById('text-color-output'));
+        
         function getBack(){
             localStorage.setItem('volume', document.getElementById('volume').value);
             localStorage.setItem('textSpeed', document.getElementById('text-speed').value);
