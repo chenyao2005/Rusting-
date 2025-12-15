@@ -1,49 +1,84 @@
---- START OF FILE pintu.html ---
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>拼图</title>
     <script src="pintu.js"></script>
     <style>
       body {
         background-image: url(../picture/背景/场景/桌子2.jpg);
         background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
       }
 
+      /* 响应式容器 */
       #puzzle-container {
-        width: 1300px;
-        height: 800px;
-        margin: 0 auto;
+        width: 90vw; /* 占据视口宽度的90% */
+        max-width: 1300px; /* 最大宽度限制 */
+        /* 高度将由JS根据比例动态设置，或者使用 aspect-ratio */
+        aspect-ratio: 13 / 8; 
+        margin: 20px auto;
         border: 2px solid #ccc;
         position: relative;
         overflow: hidden;
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       }
 
       #puzzle-board {
-        width: 1300px;
-        height: 800px;
+        width: 100%;
+        height: 100%;
         position: absolute;
+        top: 0;
+        left: 0;
       }
 
       .puzzle-piece {
-        width: 100px;
-        height: 100px;
         position: absolute;
-        background-size: 1300px 800px;
-        border: 2px solid #fff;
+        /* 背景图大小需设置为容器大小，以保持图片比例 */
+        background-size: 100% 100%; 
+        border: 1px solid #fff; /* 减小边框宽度适配移动端 */
+        box-sizing: border-box; /* 确保边框包含在尺寸内 */
         transition: all 0.3s ease-in-out;
       }
 
+      /* 按钮样式优化 */
       button {
         display: block;
-        margin: 20px auto;
-        width: 300px;
-        height: 100px;
-        font-size: 30px;
+        margin: 10px auto;
+        width: 80%;
+        max-width: 300px;
+        height: 60px; /* 稍微减小高度 */
+        font-size: 24px; /* 调整字体 */
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        cursor: pointer;
+      }
+      
+      button:active {
+          transform: scale(0.98);
+      }
+
+      /* 移动端特定优化 */
+      @media (max-width: 768px) {
+        #puzzle-container {
+            margin-top: 10vh;
+        }
+        button {
+            font-size: 20px;
+            height: 50px;
+        }
       }
     </style>
   </head>
@@ -54,7 +89,7 @@
     </div>
     <button id="shuffle-btn">打乱拼图</button>
     <div>
-			<button onclick="skip()" style="font-size:20px;margin-top:20px;" >skip</button>
+			<button onclick="skip()" style="margin-top:10px; background-color: rgba(255, 200, 200, 0.8);" >跳过 (Skip)</button>
 		</div>
   </body>
   <script>
@@ -62,20 +97,29 @@
       const puzzleContainer = document.getElementById("puzzle-container");
       const puzzleBoard = document.getElementById("puzzle-board");
       const shuffleButton = document.getElementById("shuffle-btn");
-      const imageSrc =
-        "./parents.png"; // 替换为你的图片地址
+      const imageSrc = "./parents.png"; 
       const rows = 3;
       const cols = 3;
-      const pieces = [];
+      let pieces = [];
 
       let emptyPiece;
       let isShuffling = false;
-      let isPieceMoving = false; // 【新增】用于防止快速点击的标志位
+      let isPieceMoving = false;
+      let isWin = false;
 
-      // 创建拼图块
-      function createPuzzlePieces() {
-        const pieceWidth = puzzleContainer.offsetWidth / cols;
-        const pieceHeight = puzzleContainer.offsetHeight / rows;
+      // 初始化拼图
+      function initPuzzle() {
+        // 清空现有拼图
+        puzzleBoard.innerHTML = '';
+        pieces = [];
+        
+        // 获取当前容器的实际尺寸
+        const containerWidth = puzzleContainer.offsetWidth;
+        const containerHeight = puzzleContainer.offsetHeight;
+        
+        const pieceWidth = containerWidth / cols;
+        const pieceHeight = containerHeight / rows;
+
         for (let row = 0; row < rows; row++) {
           for (let col = 0; col < cols; col++) {
             const piece = document.createElement("div");
@@ -83,24 +127,33 @@
             piece.style.width = `${pieceWidth}px`;
             piece.style.height = `${pieceHeight}px`;
             piece.style.backgroundImage = `url(${imageSrc})`;
-            piece.style.backgroundPosition = `${-col * pieceWidth}px ${
-              -row * pieceHeight
-            }px`;
+            
+            // 动态设置背景大小为容器大小
+            piece.style.backgroundSize = `${containerWidth}px ${containerHeight}px`;
+            
+            piece.style.backgroundPosition = `${-col * pieceWidth}px ${-row * pieceHeight}px`;
             piece.style.top = `${row * pieceHeight}px`;
             piece.style.left = `${col * pieceWidth}px`;
+            
+            // 使用 data 属性存储逻辑坐标
             piece.dataset.row = row;
             piece.dataset.col = col;
+            
+            // 存储初始逻辑坐标用于判断胜利
+            piece.dataset.initialRow = row;
+            piece.dataset.initialCol = col;
 
             if (row === rows - 1 && col === cols - 1) {
               emptyPiece = piece;
               piece.classList.add("empty");
+              piece.style.opacity = "0"; // 隐藏空块
             } else {
-              piece.addEventListener("click", () => {
-                // 【修改】同时检查 isPieceMoving 标志位
-                if (!isShuffling && !isPieceMoving) {
-                  movePiece(piece);
-                }
-              });
+              // 兼容触摸事件
+              piece.addEventListener("click", handleInteraction);
+              piece.addEventListener("touchstart", (e) => {
+                  e.preventDefault(); // 防止触发点击和滚动
+                  handleInteraction();
+              }, {passive: false});
             }
 
             puzzleBoard.appendChild(piece);
@@ -108,10 +161,18 @@
           }
         }
       }
+      
+      function handleInteraction() {
+          // 在事件处理函数中获取当前的 piece 对象
+          // 注意：这里的 this 或 event.target 指向触发事件的 DOM 元素
+          const piece = event.currentTarget; 
+          if (!isShuffling && !isPieceMoving) {
+              movePiece(piece);
+          }
+      }
 
       // 移动拼图块
       function movePiece(piece) {
-        // 【新增】如果正在移动中，直接返回，忽略这次点击
         if (isPieceMoving) return;
         
         const emptyPieceRow = parseInt(emptyPiece.dataset.row);
@@ -119,105 +180,171 @@
         const pieceRow = parseInt(piece.dataset.row);
         const pieceCol = parseInt(piece.dataset.col);
 
+        // 检查是否相邻
         if (
-          (pieceRow === emptyPieceRow &&
-            Math.abs(pieceCol - emptyPieceCol) === 1) ||
-          (pieceCol === emptyPieceCol &&
-            Math.abs(pieceRow - emptyPieceRow) === 1)
+          (pieceRow === emptyPieceRow && Math.abs(pieceCol - emptyPieceCol) === 1) ||
+          (pieceCol === emptyPieceCol && Math.abs(pieceRow - emptyPieceRow) === 1)
         ) {
-          // 【新增】开始移动，设置标志位
           isPieceMoving = true;
           
+          // 获取当前动态尺寸
+          const currentPieceWidth = piece.offsetWidth;
+          const currentPieceHeight = piece.offsetHeight;
+
+          // 交换 DOM 位置 (style.top/left)
+          const tempTop = emptyPiece.style.top;
+          const tempLeft = emptyPiece.style.left;
+          
+          emptyPiece.style.top = piece.style.top;
+          emptyPiece.style.left = piece.style.left;
+          
+          piece.style.top = tempTop;
+          piece.style.left = tempLeft;
+
+          // 交换逻辑坐标 (dataset)
           const tempRow = emptyPieceRow;
           const tempCol = emptyPieceCol;
-          emptyPiece.style.top = `${pieceRow * piece.offsetHeight}px`;
-          emptyPiece.style.left = `${pieceCol * piece.offsetWidth}px`;
+          
           emptyPiece.dataset.row = pieceRow;
           emptyPiece.dataset.col = pieceCol;
-
-          piece.style.top = `${tempRow * piece.offsetHeight}px`;
-          piece.style.left = `${tempCol * piece.offsetWidth}px`;
+          
           piece.dataset.row = tempRow;
           piece.dataset.col = tempCol;
           
-          // 【修改】移除立即调用的 checkWin()
-          // checkWin(); 
-          
-          // 【新增】使用 setTimeout 延迟执行 checkWin 和重置标志位
-          // 320ms 略长于 CSS transition 的 0.3s (300ms)
           setTimeout(() => {
-              isPieceMoving = false; // 重置标志位，允许新的移动
+              isPieceMoving = false;
               checkWin();
           }, 320); 
         }
       }
-
-      let isWin = false; // 添加标志位
 
       // 检查是否完成拼图
       function checkWin() {
         let isPuzzleComplete = true;
         for (let i = 0; i < pieces.length; i++) {
           const piece = pieces[i];
+          if (piece.classList.contains('empty')) continue; 
           
-          // 排除空块 (emptyPiece) 的检查
-          if (piece.classList.contains('empty')) {
-              continue; 
-          }
+          const currentRow = parseInt(piece.dataset.row);
+          const currentCol = parseInt(piece.dataset.col);
+          const initialRow = parseInt(piece.dataset.initialRow);
+          const initialCol = parseInt(piece.dataset.initialCol);
           
-          const row = parseInt(piece.dataset.row);
-          const col = parseInt(piece.dataset.col);
-          
-          // 检查当前块的 (row, col) 是否与其初始位置 (基于 i / cols, i % cols) 匹配
-          if (row !== Math.floor(i / cols) || col !== i % cols) {
+          if (currentRow !== initialRow || currentCol !== initialCol) {
             isPuzzleComplete = false;
             break;
           }
         }
 
         if (isPuzzleComplete && !isWin && !isShuffling) {
-          // 添加条件判断
-          isWin = true; // 设置标志位为true
+          isWin = true;
           setTimeout(() => {
             alert("恭喜！你完成了拼图！");
             shuffleButton.disabled = false;
-            isWin = false; // 重置标志位为false
-          }, 200);
-          localStorage.setItem("CD", 76);
+            localStorage.setItem("CD", 76);
 	        location.href="../对话/dialogue.html";
+          }, 200);
         }
       }
+
       // 打乱拼图
       function shufflePuzzle() {
         isShuffling = true;
         shuffleButton.disabled = true;
-        isWin = false; // 重置标志位为false
+        isWin = false;
 
-        const shuffleCount = 500;
+        const shuffleCount = 200; // 减少次数以加快移动端体验
         let count = 0;
-
+        // 加快打乱速度
         const intervalId = setInterval(() => {
-          const randomIndex = Math.floor(Math.random() * pieces.length);
-          const randomPiece = pieces[randomIndex];
-          movePiece(randomPiece);
-          count++;
+            // 找到空块周围的可移动块
+            const emptyRow = parseInt(emptyPiece.dataset.row);
+            const emptyCol = parseInt(emptyPiece.dataset.col);
+            const neighbors = [];
 
-          if (count >= shuffleCount) {
-            clearInterval(intervalId);
-            isShuffling = false;
-            shuffleButton.disabled = false;
-          }
+            pieces.forEach(p => {
+                const r = parseInt(p.dataset.row);
+                const c = parseInt(p.dataset.col);
+                if (p !== emptyPiece && 
+                   ((r === emptyRow && Math.abs(c - emptyCol) === 1) || 
+                    (c === emptyCol && Math.abs(r - emptyRow) === 1))) {
+                    neighbors.push(p);
+                }
+            });
+
+            if (neighbors.length > 0) {
+                const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+                
+                // 瞬间移动，不触发动画标志位检查
+                const tempTop = emptyPiece.style.top;
+                const tempLeft = emptyPiece.style.left;
+                emptyPiece.style.top = randomNeighbor.style.top;
+                emptyPiece.style.left = randomNeighbor.style.left;
+                randomNeighbor.style.top = tempTop;
+                randomNeighbor.style.left = tempLeft;
+
+                const tempRow = emptyPiece.dataset.row;
+                const tempCol = emptyPiece.dataset.col;
+                emptyPiece.dataset.row = randomNeighbor.dataset.row;
+                emptyPiece.dataset.col = randomNeighbor.dataset.col;
+                randomNeighbor.dataset.row = tempRow;
+                randomNeighbor.dataset.col = tempCol;
+            }
+            
+            count++;
+            if (count >= shuffleCount) {
+                clearInterval(intervalId);
+                isShuffling = false;
+                shuffleButton.disabled = false;
+            }
         }, 10);
       }
-      createPuzzlePieces();
+
+      // 监听窗口大小变化，重置拼图以适应新尺寸
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+              // 简单处理：重新生成拼图（会丢失当前进度，但在响应式设计中比较稳健）
+              // 更好的做法是只重新计算位置 px，保持 row/col 不变，这里为了简化代码直接重绘
+              // initPuzzle(); 
+              // 如果要保留进度，需要遍历 pieces 更新 style.width/height/top/left/bgSize
+              updatePuzzleLayout();
+          }, 200);
+      });
+
+      function updatePuzzleLayout() {
+          const containerWidth = puzzleContainer.offsetWidth;
+          const containerHeight = puzzleContainer.offsetHeight;
+          const pieceWidth = containerWidth / cols;
+          const pieceHeight = containerHeight / rows;
+
+          pieces.forEach(piece => {
+              piece.style.width = `${pieceWidth}px`;
+              piece.style.height = `${pieceHeight}px`;
+              piece.style.backgroundSize = `${containerWidth}px ${containerHeight}px`;
+              
+              const row = parseInt(piece.dataset.row);
+              const col = parseInt(piece.dataset.col);
+              const initRow = parseInt(piece.dataset.initialRow);
+              const initCol = parseInt(piece.dataset.initialCol);
+
+              piece.style.backgroundPosition = `${-initCol * pieceWidth}px ${-initRow * pieceHeight}px`;
+              piece.style.top = `${row * pieceHeight}px`;
+              piece.style.left = `${col * pieceWidth}px`;
+          });
+      }
+
+      // 首次加载
+      // 确保图片加载完成后再初始化，否则可能尺寸计算错误
+      const img = new Image();
+      img.onload = () => {
+          initPuzzle();
+      };
+      img.src = imageSrc;
+      
+      // 绑定按钮
       shuffleButton.addEventListener("click", shufflePuzzle);
     });
   </script>
 </html>
-
---- START OF FILE pintu.js ---
-
-function skip(){
-    localStorage.setItem("CD", 76);
-	location.href="../对话/dialogue.html";
-}
