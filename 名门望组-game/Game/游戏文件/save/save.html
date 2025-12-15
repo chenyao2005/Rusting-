@@ -39,6 +39,11 @@
             margin: 0 20px;
             height: 600px;width: 400px;
             font-size: 57px;
+            /* 确保内部span换行显示 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         .setback {
             position: absolute;
@@ -48,12 +53,19 @@
             height:200px;
             width:300px;
             margin-top:50px;
+            margin-bottom: 20px;
         }
-        .buttons p {
+        /* 修改选择器以匹配新的 span 结构 */
+        .buttons .save-text {
             font-size:16px;
+            display: block;
+            margin-bottom: 10px;
         }
-        .buttons h1 {
+        .buttons .save-title {
+            font-size: 1.17em;
+            font-weight: bold;
             margin-bottom: -10px;
+            display: block;
         }
     </style>
 </head>
@@ -62,20 +74,21 @@
     <div class="buttons">
         <button onclick="saveGame1()" >
             <img src="" alt="save1" id="save1img">
-            <p id="save1text">save1</p>
-            <h3>save1</h3>
+            <!-- 替换 p 和 h3 为 span，并修复原代码中未闭合的 h3 -->
+            <span id="save1text" class="save-text">save1</span>
+            <span class="save-title">save1</span>
         </button>
         <br>
         <button onclick="saveGame2()">
             <img src="" alt="save2" id="save2img">
-            <p id="save2text">save1</p>
-            <h3>save2</h3>
+            <span id="save2text" class="save-text">save1</span>
+            <span class="save-title">save2</span>
         </button>
         <br>
         <button onclick="saveGame3()">
             <img src="" alt="save3" id="save3img">
-            <p id="save3text">save1</p>
-            <h3>save3</h3>
+            <span id="save3text" class="save-text">save1</span>
+            <span class="save-title">save3</span>
         </button>
     </div>
     <div class ="setback">
