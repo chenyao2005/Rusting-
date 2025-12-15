@@ -8,19 +8,54 @@
     <script src="home.js"></script>
     <style>
         body{
-            font-family: "哥特黑白无常";
+            font-family: "哥特黑白无常", sans-serif;
         }
+        
+        /* 默认样式 (PC端) */
         #music {
-            width: 100px;height: 100px;
-            border-radius: 100px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; /* 修正为标准的圆形 */
             position: absolute;
             top: -26%;
             left: 64%;
+            padding: 0; /* 移除内边距，方便图片居中 */
+            display: flex; /* 使用 Flexbox 居中图片 */
+            justify-content: center;
+            align-items: center;
         }
         #music img {
-            width: 70px;height: 70px;
-            position: relative;
-            margin-top:10px ;
+            width: 70px;
+            height: 70px;
+            margin: 0; /* 移除 margin-top，由 Flexbox 控制 */
+        }
+
+        /* 移动端适配 */
+        @media screen and (max-width: 1000px) {
+            #title {
+                margin-top: 50px; /* 给标题一些顶部空间 */
+            }
+            
+            #music {
+                /* 移动端改为固定在屏幕右上角或右下角，避免干扰中间的按钮和标题 */
+                position: fixed; 
+                top: 20px;
+                right: 20px;
+                left: auto; /* 清除默认的 left */
+                
+                /* 调整大小适应移动端 */
+                width: 60px;
+                height: 60px;
+            }
+            
+            #music img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .buttons {
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
@@ -43,6 +78,9 @@
         <br>
         <button onclick="window.location.href='../group/group.html'">制作组</button>
         <br>
+        <!-- 将音乐按钮放在 buttons 容器内可能导致定位基准问题，
+             原代码是 absolute 定位，相对于最近的 relative 父级（.buttons）。
+             这里保持 HTML 结构不变，通过 CSS 修改定位策略。 -->
         <button onclick="togglePlay()" id="music"><img src="./picture_home/music.png" alt="音乐开关"></button>
     </div>
 </div>
