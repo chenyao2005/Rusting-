@@ -2617,112 +2617,108 @@ var dialogues = [
         next: 600,// 跳转到结尾
     },
 ];
-function loadGame1(){
-    const slot1 = localStorage.getItem("slot1");
-    if(slot1 && slot1.trim() !== ""){
-        const id = parseInt(slot1);
-        if(!isNaN(id) && dialogues[id] !== undefined){
-            localStorage.setItem("CD", slot1);
-            location.href = "../对话/dialogue.html";
-            return;
-        }
+// 获取原始存储值
+var slot1 = localStorage.getItem("slot1");
+var slot2 = localStorage.getItem("slot2");
+var slot3 = localStorage.getItem("slot3");
+
+/**
+ * 安全检查函数：验证ID是否为有效的数组索引
+ * 防止原型污染和数组越界访问
+ */
+function isValidId(idString) {
+    if (idString === null || idString === undefined) return false;
+    
+    // 尝试转换为整数
+    var id = parseInt(idString, 10);
+    
+    // 检查是否为非数字 (NaN)
+    if (isNaN(id)) return false;
+    
+    // 检查是否在数组索引范围内
+    if (id >= 0 && id < dialogues.length && dialogues[id]) {
+        return true;
     }
-    alert("存档数据无效");
+    return false;
 }
 
-function loadGame2(){
-    const slot2 = localStorage.getItem("slot2");
-    if(slot2 && slot2.trim() !== ""){
-        const id = parseInt(slot2);
-        if(!isNaN(id) && dialogues[id] !== undefined){
-            localStorage.setItem("CD", slot2);
-            location.href = "../对话/dialogue.html";
-            return;
-        }
+function loadGame1() {
+    if (isValidId(slot1)) {
+        // 确保存入 CD 的也是安全的整数格式
+        localStorage.setItem("CD", parseInt(slot1, 10));
+        location.href = "../对话/dialogue.html";
+    } else {
+        alert("没有有效的存档");
     }
-    alert("存档数据无效");
 }
 
-function loadGame3(){
-    const slot3 = localStorage.getItem("slot3");
-    if(slot3 && slot3.trim() !== ""){
-        const id = parseInt(slot3);
-        if(!isNaN(id) && dialogues[id] !== undefined){
-            localStorage.setItem("CD", slot3);
-            location.href = "../对话/dialogue.html";
-            return;
-        }
-    }
-    alert("存档数据无效");
-}
-function showMessage(){
-    var slot1=localStorage.getItem("slot1");
-    var slot2=localStorage.getItem("slot2");
-    var slot3=localStorage.getItem("slot3");
-    
-    var save1img = document.getElementById("save1img");
-    var save1text = document.getElementById("save1text");
-    var save2img = document.getElementById("save2img");
-    var save2text = document.getElementById("save2text");
-    var save3img = document.getElementById("save3img");
-    var save3text = document.getElementById("save3text");
-    
-    // 先重置所有元素
-    [save1img, save2img, save3img].forEach(img => {
-        img.style.display = "none";
-        img.src = "";
-    });
-    
-    [save1text, save2text, save3text].forEach(text => {
-        text.innerHTML = "EMPTY";
-    });
-    
-    // 处理存档1
-    if(slot1 && slot1.trim() !== ""){
-        var id1 = parseInt(slot1);
-        if(!isNaN(id1) && dialogues[id1] !== undefined){
-            save1img.style.display = "inline-block";
-            save1img.src = dialogues[id1].background;
-            save1text.innerHTML = dialogues[id1].text;
-        }
-    }
-    
-    // 处理存档2
-    if(slot2 && slot2.trim() !== ""){
-        var id2 = parseInt(slot2);
-        if(!isNaN(id2) && dialogues[id2] !== undefined){
-            save2img.style.display = "inline-block";
-            save2img.src = dialogues[id2].background;
-            save2text.innerHTML = dialogues[id2].text;
-        }
-    }
-    
-    // 处理存档3
-    if(slot3 && slot3.trim() !== ""){
-        var id3 = parseInt(slot3);
-        if(!isNaN(id3) && dialogues[id3] !== undefined){
-            save3img.style.display = "inline-block";
-            save3img.src = dialogues[id3].background;
-            save3text.innerHTML = dialogues[id3].text;
-        }
+function loadGame2() {
+    if (isValidId(slot2)) {
+        localStorage.setItem("CD", parseInt(slot2, 10));
+        location.href = "../对话/dialogue.html";
+    } else {
+        alert("没有有效的存档");
     }
 }
+
+function loadGame3() {
+    if (isValidId(slot3)) {
+        localStorage.setItem("CD", parseInt(slot3, 10));
+        location.href = "../对话/dialogue.html";
+    } else {
+        alert("没有有效的存档");
+    }
+}
+
+function showMessage() {
+    // 针对 Slot 1 的安全渲染
+    if (isValidId(slot1)) {
+        var id = parseInt(slot1, 10);
+        var btnImg = document.getElementById("save1img");
+        var btnText = document.getElementById("save1text");
+        
+        btnImg.style.display = "inline-block";
+        // 安全访问属性
+        btnImg.src = dialogues[id].background;
+        btnText.innerText = dialogues[id].text; // 使用 innerText 防止 XSS
+    } else {
+        document.getElementById("save1img").style.display = "none";
+        document.getElementById("save1text").innerText = "EMPTY";
+    }
+
+    // 针对 Slot 2 的安全渲染
+    if (isValidId(slot2)) {
+        var id = parseInt(slot2, 10);
+        var btnImg = document.getElementById("save2img");
+        var btnText = document.getElementById("save2text");
+        
+        btnImg.style.display = "inline-block";
+        btnImg.src = dialogues[id].background;
+        btnText.innerText = dialogues[id].text;
+    } else {
+        document.getElementById("save2img").style.display = "none";
+        document.getElementById("save2text").innerText = "EMPTY";
+    }
+
+    // 针对 Slot 3 的安全渲染
+    if (isValidId(slot3)) {
+        var id = parseInt(slot3, 10);
+        var btnImg = document.getElementById("save3img");
+        var btnText = document.getElementById("save3text");
+        
+        btnImg.style.display = "inline-block";
+        btnImg.src = dialogues[id].background;
+        btnText.innerText = dialogues[id].text;
+    } else {
+        document.getElementById("save3img").style.display = "none";
+        document.getElementById("save3text").innerText = "EMPTY";
+    }
+}
+
 function initGame() {
     showMessage();
 }
 
-if (typeof window !== 'undefined') {
-    window.addEventListener("load", function () {
-        initGame();
-    });
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { 
-    loadGame1, 
-    loadGame2, 
-    loadGame3, 
-    showMessage,
-    initGame 
-  };
-}
+window.addEventListener("load", function () {
+    initGame();
+});

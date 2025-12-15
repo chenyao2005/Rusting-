@@ -2613,75 +2613,101 @@ var dialogues = [
         next: 600,
     },
 ];
-var slot1=localStorage.getItem("slot1");
-var slot2=localStorage.getItem("slot2");
-var slot3=localStorage.getItem("slot3");
-function saveGame1(){
-    const cd = localStorage.getItem("CD");
+//
+var slot1 = localStorage.getItem("slot1");
+var slot2 = localStorage.getItem("slot2");
+var slot3 = localStorage.getItem("slot3");
 
-    if (cd !== null) {
-        localStorage.setItem("slot1", cd);
-        alert("保存成功！");
-        location.reload();
-    } else {
-        alert("没有当前游戏进度可以保存");
+/**
+ * 安全检查函数：验证ID是否为有效的数组索引
+ */
+function isValidId(idString) {
+    if (idString === null || idString === undefined) return false;
+    var id = parseInt(idString, 10);
+    if (isNaN(id)) return false;
+    // 确保 id 对应的 dialogues 对象存在
+    if (id >= 0 && id < dialogues.length && dialogues[id]) {
+        return true;
     }
-}
-function saveGame2(){
-    const cd = localStorage.getItem("CD");
-    if (cd && cd.trim() !== "") {
-        localStorage.setItem("slot2", cd);
-        alert("保存成功！");
-        location.reload();
-    } else {
-        alert("没有当前游戏进度可以保存");
-    }
+    return false;
 }
 
-function saveGame3(){
-    const cd = localStorage.getItem("CD");
-    if (cd && cd.trim() !== "") {
-        localStorage.setItem("slot3", cd);
+function saveGame1() {
+    // 保存前建议也检查当前 CD 是否存在
+    var currentCD = localStorage.getItem("CD");
+    if (currentCD) {
+        localStorage.setItem("slot1", currentCD);
         alert("保存成功！");
         location.reload();
     } else {
-        alert("没有当前游戏进度可以保存");
+        alert("当前没有可保存的游戏进度");
     }
 }
-function BackToGame(){
-    location.href = "../对话/dialogue.html";
-    currentDialogue = localStorage.getItem("CD");
+
+function saveGame2() {
+    var currentCD = localStorage.getItem("CD");
+    if (currentCD) {
+        localStorage.setItem("slot2", currentCD);
+        alert("保存成功！");
+        location.reload();
+    } else {
+        alert("当前没有可保存的游戏进度");
+    }
 }
-function showMessage(){
-    var slot1=localStorage.getItem("slot1");
-    var slot2=localStorage.getItem("slot2");
-    var slot3=localStorage.getItem("slot3");
-    
-    if(slot1 && slot1.trim() !== "" && !isNaN(parseInt(slot1)) && dialogues[parseInt(slot1)]){
-        document.getElementById("save1img").style.display="inline-block";
-        document.getElementById("save1img").src=dialogues[parseInt(slot1)].background;
-        document.getElementById("save1text").innerHTML=dialogues[parseInt(slot1)].text;
-    }else{
-        document.getElementById("save1img").style.display="none";
-        document.getElementById("save1text").innerHTML="EMPTY";
+
+function saveGame3() {
+    var currentCD = localStorage.getItem("CD");
+    if (currentCD) {
+        localStorage.setItem("slot3", currentCD);
+        alert("保存成功！");
+        location.reload();
+    } else {
+        alert("当前没有可保存的游戏进度");
     }
-    
-    if(slot2 && slot2.trim() !== "" && !isNaN(parseInt(slot2)) && dialogues[parseInt(slot2)]){
-        document.getElementById("save2img").style.display="inline-block";
-        document.getElementById("save2img").src=dialogues[parseInt(slot2)].background;
-        document.getElementById("save2text").innerHTML=dialogues[parseInt(slot2)].text;
-    }else{
-        document.getElementById("save2img").style.display="none";
-        document.getElementById("save2text").innerHTML="EMPTY";
+}
+
+function BackToGame() {
+    // 检查 CD 是否存在，避免跳转后出错
+    if (localStorage.getItem("CD")) {
+        location.href = "../对话/dialogue.html";
+    } else {
+        // 如果没有进度，可能需要跳转回主页或者不做操作
+        location.href = "../homepage/home.html"; 
     }
-    
-    if(slot3 && slot3.trim() !== "" && !isNaN(parseInt(slot3)) && dialogues[parseInt(slot3)]){
-        document.getElementById("save3img").style.display="inline-block";
-        document.getElementById("save3img").src=dialogues[parseInt(slot3)].background;
-        document.getElementById("save3text").innerHTML=dialogues[parseInt(slot3)].text;
-    }else{
-        document.getElementById("save3img").style.display="none";
-        document.getElementById("save3text").innerHTML="EMPTY";
+}
+
+function showMessage() {
+    // 针对 Slot 1 的安全渲染
+    if (isValidId(slot1)) {
+        var id = parseInt(slot1, 10);
+        document.getElementById("save1img").style.display = "inline-block";
+        document.getElementById("save1img").src = dialogues[id].background;
+        document.getElementById("save1text").innerText = dialogues[id].text;
+    } else {
+        document.getElementById("save1img").style.display = "none";
+        document.getElementById("save1text").innerText = "EMPTY";
+    }
+
+    // 针对 Slot 2 的安全渲染
+    if (isValidId(slot2)) {
+        var id = parseInt(slot2, 10);
+        document.getElementById("save2img").style.display = "inline-block";
+        document.getElementById("save2img").src = dialogues[id].background;
+        document.getElementById("save2text").innerText = dialogues[id].text;
+    } else {
+        document.getElementById("save2img").style.display = "none";
+        document.getElementById("save2text").innerText = "EMPTY";
+    }
+
+    // 针对 Slot 3 的安全渲染
+    if (isValidId(slot3)) {
+        var id = parseInt(slot3, 10);
+        document.getElementById("save3img").style.display = "inline-block";
+        document.getElementById("save3img").src = dialogues[id].background;
+        document.getElementById("save3text").innerText = dialogues[id].text;
+    } else {
+        document.getElementById("save3img").style.display = "none";
+        document.getElementById("save3text").innerText = "EMPTY";
     }
 }
 
@@ -2689,18 +2715,6 @@ function initGame() {
     showMessage();
 }
 
-if (typeof window !== 'undefined') {
-    window.addEventListener("load", function () {
-        initGame();
-    });
-}
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    saveGame1,
-    saveGame2,
-    saveGame3,
-    BackToGame,
-    showMessage,
-    initGame
-  };
-}
+window.addEventListener("load", function () {
+    initGame();
+});
