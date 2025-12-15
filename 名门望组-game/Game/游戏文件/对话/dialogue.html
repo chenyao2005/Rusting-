@@ -38,11 +38,33 @@
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="lihui" class="backlihui" id="backlihui">
         <h1 class="name" id="name"></h1>    
         <p class="text" id="text"></p>
-        <p class="setting"><a onclick="getBack()" style="cursor: pointer;">上一页</a>&nbsp;&nbsp;<a onclick="save()" style="cursor: pointer;">保存</a> &nbsp;&nbsp;<a onclick="toSetting()" style="cursor: pointer;">设置</a> &nbsp;&nbsp;<a href="..\homepage\home.html" style="text-decoration: none;color: #ffffff;
-    -webkit-text-stroke: 0.3px #000000;" onclick="toHome()">主菜单</a></p>
+        <p class="setting">
+            <a onclick="getBack()" style="cursor: pointer;">上一页</a>&nbsp;&nbsp;
+            <a onclick="save()" style="cursor: pointer;">保存</a> &nbsp;&nbsp;
+            <a onclick="toSetting()" style="cursor: pointer;">设置</a> &nbsp;&nbsp;
+            <!-- 修改处：移除 href 跳转，改用 confirmExit 函数处理 -->
+            <a href="javascript:void(0);" 
+               style="text-decoration: none;color: #ffffff;-webkit-text-stroke: 0.3px #000000;" 
+               onclick="confirmExit()">主菜单</a>
+        </p>
     </div>        
         <button class="button" id="button1">按钮1</button>
         <button class="button" id="button2">按钮2</button>
         <audio id="music"></audio>
+
+    <!-- 新增脚本：处理退出确认 -->
+    <script>
+        function confirmExit() {
+            // 弹出二次确认框
+            if (confirm("确定要返回主菜单吗？\n未保存的进度可能会丢失，建议先点击“保存”。")) {
+                // 如果 data.js 中定义了 toHome 清理函数，先执行它
+                if (typeof toHome === 'function') {
+                    toHome();
+                }
+                // 执行跳转
+                window.location.href = "../homepage/home.html";
+            }
+        }
+    </script>
 </body>
 </html>
