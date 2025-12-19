@@ -2628,6 +2628,9 @@ var volume = parseInt(localStorage.getItem("volume")) || 100;
 
 function showMessage() {
     // 额外的检查，以防 currentDialogue 变成一个无效的数组索引
+    if (typeof checkAndRecordDialogue === 'function') {
+        checkAndRecordDialogue(currentDialogue);
+    }
     if (dialogues[currentDialogue] === undefined) {
         console.error("尝试显示一个不存在的对话ID: " + currentDialogue);
         // 尝试重置到开始对话ID，防止无限错误
