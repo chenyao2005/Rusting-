@@ -11,7 +11,7 @@ Rusting 是集恐怖、解密、多结局于一体的剧情向文字冒险游戏
 ![示例图片](./images/图片1.png)
 
 
-👉 [点击这里进入 Rusting 游戏](https://chenyao2005.github.io/Rusting-/名门望组-game/Game/游戏文件/landing/landing.html)
+👉 [点击这里进入 Rusting 游戏]( https://chenyao2005.github.io/Rusting-/名门望组-game/Game/游戏文件/landing/landing.html)
 
 
 🎮 **游戏特色**
