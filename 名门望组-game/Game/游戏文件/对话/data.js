@@ -2632,6 +2632,9 @@ var textSpeed =parseInt(localStorage.getItem("textSpeed")) || 50;
 var volume = parseInt(localStorage.getItem("volume")) || 100;
 
 function showMessage() {
+    if (typeof checkAndRecordDialogue === 'function') {
+        checkAndRecordDialogue(currentDialogue);
+    }
     // 额外的检查，以防 currentDialogue 变成一个无效的数组索引
     if (dialogues[currentDialogue] === undefined) {
         console.error("尝试显示一个不存在的对话ID: " + currentDialogue);

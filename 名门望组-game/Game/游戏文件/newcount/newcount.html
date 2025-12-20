@@ -1,41 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注册</title>
-    <link rel="stylesheet" href="./newcount.css">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="newcount.css">
+    <script src="../landing/landing.js"></script>
 </head>
 <body>
-    <div class="container">
-        <input required="" type="text" name="username" class="input">
-        <label class="label">Username</label>
-    </div>
-    <div class="password">
-        <input required="" type="password" name="password" class="input2">
-        <label class="label2">Password</label>
-    </div>
-    <button class="login-button" onclick="registerUser()">Establish</button>
-    <script>
-        function registerUser() {
-            const username = document.querySelector('input[name="username"]').value;
-            const password = document.querySelector('input[name="password"]').value;
+<div class="main-container">
+  <!-- 用户名 -->
+  <div class="username-group">
+    <input type="text" class="username-input" id="username" maxlength="20" required>
+    <label class="username-label">用户名</label>
+    <div class="error-message" id="username-error"></div>
+  </div>
+  
+  <!-- 密码 -->
+  <div class="password-group">
+    <input type="password" class="password-input" id="password" maxlength="30" required>
+    <label class="password-label">密码</label>
+    <div class="error-message" id="password-error"></div>
+  </div>
+  
+  <!-- 按钮 -->
+  <button class="register-button" onclick="validateAndRegister()">创建账户</button>
+  <button class="back-button" onclick="window.location.href='../landing/landing.html'">返回登录</button>
+</div>
 
-            if (!username || !password) {
-                alert('Username and password cannot be empty');
-                return;
+<script>
+    // 输入验证函数
+    function validateInput(input, type) {
+        let value = input.value.trim();
+        let errorElement = document.getElementById(`${type}-error`);
+        
+        // 基本的XSS防护：移除危险字符
+        value = value.replace(/[<>'"&\\\/]/g, '');
+        input.value = value;
+        
+        // 用户名验证规则
+        if (type === 'username') {
+            // 只允许字母、数字、下划线、汉字，长度3-20
+            const usernameRegex = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,20}$/;
+            
+            if (value.length === 0) {
+                errorElement.textContent = '请输入用户名';
+                errorElement.style.display = 'block';
+                input.classList.add('error');
+                return false;
             }
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-            const userExists = users.some(user => user.username === username);
-            if (userExists) {
-                alert('Username already exists');
-                return;
+            
+            if (value.length < 3) {
+                errorElement.textContent = '用户名至少需要3个字符';
+                errorElement.style.display = 'block';
+                input.classList.add('error');
+                return false;
             }
-            users.push({ username, password });
-            localStorage.setItem('users', JSON.stringify(users));
-            alert('Registration successful');
-            window.location.href = '../landing/landing.html'; 
+            
+            if (!usernameRegex.test(value)) {
+                errorElement.textContent = '用户名只能包含字母、数字、下划线和汉字';
+                errorElement.style.display = 'block';
+                input.classList.add('error');
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            input.classList.remove('error');
+            return true;
         }
-    </script>
+        
+        // 密码验证规则
+        if (type === 'password') {
+            if (value.length === 0) {
+                errorElement.textContent = '请输入密码';
+                errorElement.style.display = 'block';
+                input.classList.add('error');
+                return false;
+            }
+            
+            // 密码长度至少6位
+            if (value.length < 6) {
+                errorElement.textContent = '密码至少需要6个字符';
+                errorElement.style.display = 'block';
+                input.classList.add('error');
+                return false;
+            }
+            
+            // 检查是否包含危险字符
+            const dangerousChars = /[<>'"&\\\/]/;
+            if (dangerousChars.test(value)) {
+                errorElement.textContent = '密码包含无效字符（<>"\'&\\/）';
+                errorElement.style.display = 'block';
+                input.classList.add('error');
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            input.classList.remove('error');
+            return true;
+        }
+        
+        return true;
+    }
+    
+    // 检查用户名是否已存在
+    function checkUsernameExists(username) {
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        return users.some(user => user.username === username);
+    }
+    
+    // 注册前验证
+    function validateAndRegister() {
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        
+        // 验证输入
+        const isUsernameValid = validateInput(usernameInput, 'username');
+        const isPasswordValid = validateInput(passwordInput, 'password');
+        
+        if (!isUsernameValid || !isPasswordValid) {
+            return false;
+        }
+        
+        // 检查用户名是否已存在
+        const username = usernameInput.value.trim();
+        if (checkUsernameExists(username)) {
+            const errorElement = document.getElementById('username-error');
+            errorElement.textContent = '用户名已存在，请选择其他用户名';
+            errorElement.style.display = 'block';
+            usernameInput.classList.add('error');
+            return false;
+        }
+        
+        // 如果验证通过，执行注册
+        registerUser();
+    }
+    
+    // 实时输入验证
+    document.getElementById('username').addEventListener('input', function() {
+        validateInput(this, 'username');
+    });
+    
+    document.getElementById('password').addEventListener('input', function() {
+        validateInput(this, 'password');
+    });
+    
+    // 注册函数
+    function registerUser() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        
+        // 最终验证
+        if (!validateUsername(username) || !validatePassword(password)) {
+            alert('用户名或密码不符合要求');
+            return;
+        }
+        
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        // 再次检查用户名是否已存在（防止并发问题）
+        const userExists = users.some(user => user.username === username);
+        if (userExists) {
+            alert('用户名已存在，请选择其他用户名');
+            document.getElementById('username-error').textContent = '用户名已存在';
+            document.getElementById('username-error').style.display = 'block';
+            document.getElementById('username').classList.add('error');
+            return;
+        }
+        
+        // 存储用户信息
+        users.push({ 
+            username: username, 
+            password: password 
+        });
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        alert('注册成功！即将跳转到登录页面');
+        
+        // 存储当前用户信息（可选）
+        localStorage.setItem("currentUser", JSON.stringify({
+            username: username,
+            registerTime: new Date().toISOString()
+        }));
+        
+        // 延迟跳转，让用户看到成功提示
+        setTimeout(function() {
+            window.location.href = '../landing/landing.html';
+        }, 1000);
+    }
+    
+    // 使用landing.js中的验证函数
+    function validateUsername(username) {
+        const usernameRegex = /^[a-zA-Z0-9_\u4e00-\u9fa5]{3,20}$/;
+        return usernameRegex.test(username);
+    }
+    
+    function validatePassword(password) {
+        // 密码长度至少6位
+        if (password.length < 6) {
+            return false;
+        }
+        
+        // 检查是否包含危险字符
+        const dangerousChars = /[<>'"&\\\/]/;
+        return !dangerousChars.test(password);
+    }
+    
+    // 阻止表单提交
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化本地存储（如果还没有初始化）
+        if (typeof initializeLocalStorage === 'function') {
+            initializeLocalStorage();
+        }
+        if (typeof sanitizeExistingData === 'function') {
+            sanitizeExistingData();
+        }
+        
+        console.log('注册页面初始化完成');
+    });
+</script>
 </body>
 </html>

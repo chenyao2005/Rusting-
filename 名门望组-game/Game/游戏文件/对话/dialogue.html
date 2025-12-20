@@ -6,6 +6,7 @@
     <title>Rusting</title>
     <link type="text/css" rel="stylesheet" href="css.css" /> 
     <script src="data.js"></script>
+    <script src="journal.js"></script> 
 </head>
 <body>
     <style>
@@ -41,11 +42,10 @@
         <p class="setting">
             <a onclick="getBack()" style="cursor: pointer;">上一页</a>&nbsp;&nbsp;
             <a onclick="save()" style="cursor: pointer;">保存</a> &nbsp;&nbsp;
+            <a onclick="openJournal()" style="cursor: pointer;">剧情日志</a> &nbsp;&nbsp; <!-- 新增按钮 -->
             <a onclick="toSetting()" style="cursor: pointer;">设置</a> &nbsp;&nbsp;
-            <!-- 修改处：移除 href 跳转，改用 confirmExit 函数处理 -->
-            <a href="javascript:void(0);" 
-               style="text-decoration: none;color: #ffffff;-webkit-text-stroke: 0.3px #000000;" 
-               onclick="confirmExit()">主菜单</a>
+            <a href="..\homepage\home.html" style="text-decoration: none;color: #ffffff;
+        -webkit-text-stroke: 0.3px #000000;" onclick="toHome()">主菜单</a>
         </p>
     </div>        
         <button class="button" id="button1">按钮1</button>
