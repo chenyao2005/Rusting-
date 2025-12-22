@@ -50,7 +50,7 @@ const RESOURCES = {
         SONG_ZHI_MING: "../音效/《志铭》犬儒乐队.mp3"
     },
 };
-var dialogues = [
+const dialogues = [
     {
         id:0,
         text: "正月初二，一个普普通通的一天，醒来已经将近中午。",
@@ -2613,108 +2613,114 @@ var dialogues = [
         next: 600,
     },
 ];
-//
-var slot1 = localStorage.getItem("slot1");
-var slot2 = localStorage.getItem("slot2");
-var slot3 = localStorage.getItem("slot3");
+// 获取存档数据
+// 使用 const/let 替代 var，避免全局变量污染，但为了让下方函数能访问，
+// 这里在顶层作用域声明（在浏览器环境中它们是全局可见的，但不会挂载到 window 上覆盖同名属性）
+const slot1 = localStorage.getItem("slot1");
+const slot2 = localStorage.getItem("slot2");
+const slot3 = localStorage.getItem("slot3");
 
 /**
  * 安全检查函数：验证ID是否为有效的数组索引
+ * @param {string|number} idString 
+ * @returns {boolean}
  */
 function isValidId(idString) {
     if (idString === null || idString === undefined) return false;
-    var id = parseInt(idString, 10);
+    const id = parseInt(idString, 10);
     if (isNaN(id)) return false;
     // 确保 id 对应的 dialogues 对象存在
-    if (id >= 0 && id < dialogues.length && dialogues[id]) {
-        return true;
-    }
-    return false;
+    return id >= 0 && id < dialogues.length && dialogues[id];
 }
 
-function saveGame1() {
-    // 保存前建议也检查当前 CD 是否存在
-    var currentCD = localStorage.getItem("CD");
+/**
+ * 通用保存函数
+ * @param {string} slotKey localStorage的键名 (slot1, slot2, slot3)
+ */
+function saveGameToSlot(slotKey) {
+    const currentCD = localStorage.getItem("CD");
     if (currentCD) {
-        localStorage.setItem("slot1", currentCD);
+        localStorage.setItem(slotKey, currentCD);
         alert("保存成功！");
-        location.reload();
+        location.reload(); // 刷新页面以更新显示的存档信息
     } else {
         alert("当前没有可保存的游戏进度");
     }
+}
+
+// 具体的保存按钮点击事件绑定
+function saveGame1() {
+    saveGameToSlot("slot1");
 }
 
 function saveGame2() {
-    var currentCD = localStorage.getItem("CD");
-    if (currentCD) {
-        localStorage.setItem("slot2", currentCD);
-        alert("保存成功！");
-        location.reload();
-    } else {
-        alert("当前没有可保存的游戏进度");
-    }
+    saveGameToSlot("slot2");
 }
 
 function saveGame3() {
-    var currentCD = localStorage.getItem("CD");
-    if (currentCD) {
-        localStorage.setItem("slot3", currentCD);
-        alert("保存成功！");
-        location.reload();
-    } else {
-        alert("当前没有可保存的游戏进度");
-    }
+    saveGameToSlot("slot3");
 }
 
+/**
+ * 返回游戏逻辑
+ */
 function BackToGame() {
     // 检查 CD 是否存在，避免跳转后出错
     if (localStorage.getItem("CD")) {
         location.href = "../对话/dialogue.html";
     } else {
-        // 如果没有进度，可能需要跳转回主页或者不做操作
+        // 如果没有进度，跳转回主页
         location.href = "../homepage/home.html"; 
     }
 }
 
-function showMessage() {
-    // 针对 Slot 1 的安全渲染
-    if (isValidId(slot1)) {
-        var id = parseInt(slot1, 10);
-        document.getElementById("save1img").style.display = "inline-block";
-        document.getElementById("save1img").src = dialogues[id].background;
-        document.getElementById("save1text").innerText = dialogues[id].text;
-    } else {
-        document.getElementById("save1img").style.display = "none";
-        document.getElementById("save1text").innerText = "EMPTY";
-    }
+/**
+ * 辅助函数：更新单个存档位的 UI 显示
+ * 解决了原代码中 var id 重复声明的问题
+ * @param {string} slotValue 存档的值 (ID)
+ * @param {string} imgId 图片元素的DOM ID
+ * @param {string} textId 文本元素的DOM ID
+ */
+function updateSlotView(slotValue, imgId, textId) {
+    const imgElem = document.getElementById(imgId);
+    const textElem = document.getElementById(textId);
+    
+    // 安全检查：防止HTML元素不存在导致报错
+    if (!imgElem || !textElem) return;
 
-    // 针对 Slot 2 的安全渲染
-    if (isValidId(slot2)) {
-        var id = parseInt(slot2, 10);
-        document.getElementById("save2img").style.display = "inline-block";
-        document.getElementById("save2img").src = dialogues[id].background;
-        document.getElementById("save2text").innerText = dialogues[id].text;
+    if (isValidId(slotValue)) {
+        // 使用 let/const 声明局部变量，避免污染
+        const id = parseInt(slotValue, 10);
+        const data = dialogues[id];
+        
+        imgElem.style.display = "inline-block";
+        // 优先使用 background，如果不存在则使用空字符串
+        imgElem.src = data.background || ""; 
+        textElem.innerText = data.text;
     } else {
-        document.getElementById("save2img").style.display = "none";
-        document.getElementById("save2text").innerText = "EMPTY";
-    }
-
-    // 针对 Slot 3 的安全渲染
-    if (isValidId(slot3)) {
-        var id = parseInt(slot3, 10);
-        document.getElementById("save3img").style.display = "inline-block";
-        document.getElementById("save3img").src = dialogues[id].background;
-        document.getElementById("save3text").innerText = dialogues[id].text;
-    } else {
-        document.getElementById("save3img").style.display = "none";
-        document.getElementById("save3text").innerText = "EMPTY";
+        // 空存档状态
+        imgElem.style.display = "none";
+        // 这里的文本可以根据 HTML 里的默认值来，或者显式设置
+        textElem.innerText = "暂无存档"; 
     }
 }
 
+/**
+ * 显示所有存档信息
+ */
+function showMessage() {
+    // 调用辅助函数处理三个存档位，逻辑清晰且无变量冲突
+    updateSlotView(slot1, "save1img", "save1text");
+    updateSlotView(slot2, "save2img", "save2text");
+    updateSlotView(slot3, "save3img", "save3text");
+}
+
+// 初始化
 function initGame() {
     showMessage();
 }
 
+// 页面加载完成后执行
 window.addEventListener("load", function () {
     initGame();
 });

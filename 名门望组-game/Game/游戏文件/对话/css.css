@@ -1,3 +1,4 @@
+/* --- 1. 变量定义 --- */
 :root {
     /* 主色调 - 白色系 */
     --color-white: #FFFFFF;
@@ -25,63 +26,25 @@
     --color-glow-transparent: rgba(255, 255, 255, 0);
 }
 
-@media (max-width:1000px) {
-    div #images {
-        width: 100%;
-    }
-    div.img {
-        margin: 3px;
-        float: left;
-        text-align: center;
-    }
-    div.img a img {
-        display: inline-block;
-        margin: 3px;
-        width: 200px;
-        height: 200px;
-    }
-    div.img a:hover img {
-        transform: none;
-    }
-    div.desc {
-        text-align: center;
-        font: 12px "哥特黑白无常";
-        width: 200px;
-        margin: 10px 5px 10px 5px;
-    }
-    #main{height: auto;}
-
-    /* 新增：移动端对话框样式优化 */
-    p.text {
-        left: 5% !important;      /* 减少左边距，利用屏幕宽度 */
-        max-width: 90% !important; /* 增加最大宽度 */
-        font-size: 16px !important; /* 强制减小字体 */
-        top: 10px !important;
-        height: 70% !important; /* 限制高度以触发滚动 */
-    }
-    h1.name {
-        left: 5% !important; /* 名字也相应左移 */
-        bottom: 82% !important;
-        font-size: 18px !important;
-    }
-  }
-
 @font-face {
     font-family: "哥特黑白无常";
     src: url(哥特黑白无常.ttf);
 }
+
+/* --- 2. 基础布局与组件样式 (PC优先/默认) --- */
+
+/* 移除标签限定，降低权重，方便覆盖 */
 #content {
-    margin:auto;
-    width:100%;
+    margin: auto;
+    width: 100%;
     height: 30%;
-    position:absolute;
-    bottom:0;
-    left:0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     background-image: url(素材/界面/dialogueback1.png);
     background-size: 100% 100%;
 }
 
-/* 修改背景图片样式以防止拉伸变形 */
 #background {
     position: absolute;
     top: 0;
@@ -89,80 +52,102 @@
     width: 100%;
     height: 100%;
     z-index: -3;
-    object-fit: cover; /* 关键修改：保持比例覆盖 */
-    object-position: center; /* 图片居中显示 */
+    object-fit: cover;
+    object-position: center;
 }
 
-p.text {
-    Text-indent: 2em;
+/* 将 p.text 改为 .text */
+.text {
+    text-indent: 2em;
     max-width: 75%;
     position: absolute;
     line-height: 1.75;
-    font-size:24px;
-    left:20%;
+    font-size: 24px;
+    left: 20%;
     color: var(--color-white);
     -webkit-text-stroke: 0.3px var(--color-black);
     font-family: "哥特黑白无常";
     overflow: auto;
     user-select: none;
     top: 15px;
-    /* 增加高度限制，确保PC端文字过多时也能滚动，而不是溢出到屏幕外 */
     max-height: 75%; 
 }
-h1.name{
+
+/* 将 h1.name 改为 .name */
+.name {
     position: absolute;
     bottom: 85%;
-    left:18%;
+    left: 18%;
     color: var(--color-white); 
     -webkit-text-stroke: 0.3px var(--color-black); 
     font-family: "哥特黑白无常";
     user-select: none;
+    margin: 0; /* 重置 h1 默认边距 */
 }
-img.saylihui{
+
+/* 图片类样式 */
+.saylihui {
     position: absolute;
     left: 10px;
-    width:20%;
-    height:auto;
-    bottom:0;
+    width: 20%;
+    height: auto;
+    bottom: 0;
     z-index: 1;
     user-select: none;
 }
-img.backlihui{
+
+.backlihui {
     position: absolute;
-    width:50%;
-    height:auto;
+    width: 50%;
+    height: auto;
     left: 50%;
     transform: translateX(-50%);
-    bottom:0;
+    bottom: 0;
     z-index: -2;
     user-select: none;
 }
-.setting{
+
+/* 底部操作区 */
+.setting {
     position: absolute;
-    bottom:10px;
-    right:10%;
-    font-size: 20px;
-    color: var(--color-white);
-    -webkit-text-stroke: 0.3px var(--color-black); 
-    font-family: "哥特黑白无常";
-}
-#back{
-    position: absolute;
-    bottom:0;
-    right:15%;
+    bottom: 10px;
+    right: 10%;
     font-size: 20px;
     color: var(--color-white);
     -webkit-text-stroke: 0.3px var(--color-black); 
     font-family: "哥特黑白无常";
 }
 
+/* 链接通用样式 */
+.action-link {
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-white);
+    -webkit-text-stroke: 0.3px var(--color-black);
+}
+
+.action-link:hover {
+    color: var(--color-gray-lighter);
+}
+
+#back {
+    position: absolute;
+    bottom: 0;
+    right: 15%;
+    font-size: 20px;
+    color: var(--color-white);
+    -webkit-text-stroke: 0.3px var(--color-black); 
+    font-family: "哥特黑白无常";
+}
+
+/* 按钮样式 */
 .button {  
     display: flex;
-    width: auto; /* 调整宽度为自动 */
-    height: auto; /* 调整高度为自动 */
+    width: auto;
+    height: auto;
     text-align: center;
     justify-content: center;
-    align-items: center; /* 垂直居中 */
+    align-items: center;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -211,5 +196,58 @@ img.backlihui{
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1000; /* 确保视频在最顶层 */
+    z-index: 1000;
+}
+
+/* --- 3. 媒体查询 (放在底部，无需 !important) --- */
+@media (max-width: 1000px) {
+    /* 首页相关样式 (优化选择器) */
+    #images {
+        width: 100%;
+    }
+    .img {
+        margin: 3px;
+        float: left;
+        text-align: center;
+    }
+    .img a img {
+        display: inline-block;
+        margin: 3px;
+        width: 200px;
+        height: 200px;
+    }
+    .img a:hover img {
+        transform: none;
+    }
+    .desc {
+        text-align: center;
+        font: 12px "哥特黑白无常";
+        width: 200px;
+        margin: 10px 5px 10px 5px;
+    }
+    #main { height: auto; }
+
+    /* 对话框移动端样式优化 */
+    .text {
+        left: 5%;      
+        max-width: 90%;
+        font-size: 16px; /* 原有 !important 已移除，因层叠顺序自然覆盖 */
+        top: 10px;
+        height: 80%; /* 合并了HTML中 style 标签的逻辑 */
+        display: block;
+        overflow-y: auto;
+        line-height: 1.5;
+    }
+
+    .name {
+        left: 5%;
+        bottom: 82%;
+        font-size: 18px;
+    }
+    
+    .saylihui {
+        transform: translate(0, -150px);
+        width: 30%;
+        height: auto;
+    }
 }

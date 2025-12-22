@@ -6,88 +6,127 @@
     <title>结尾</title>
     <style>
         /* From Uiverse.io by vinodjangid07 */ 
-.Btn {
-    position: absolute;
-    left: 48%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 45px;
-  height: 45px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition-duration: .3s;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-  background-color: rgb(255, 65, 65);
-}
+        .Btn {
+            position: absolute; /* 修复：保留 absolute 以便悬浮在视频上方 */
+            left: 48%;
+            bottom: 50px;       /* 新增：固定到底部，避免遮挡视频主体 */
+            z-index: 10;        /* 新增：确保按钮在视频图层之上 */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            /* position: relative;  已删除：与 absolute 冲突 */
+            overflow: hidden;
+            transition-duration: .3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+            background-color: rgb(255, 65, 65);
+        }
 
-/* plus sign */
-.sign {
-  width: 100%;
-  transition-duration: .3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+        /* plus sign */
+        .sign {
+            width: 100%;
+            transition-duration: .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.sign svg {
-  width: 17px;
-}
+        .sign svg {
+            width: 17px;
+        }
 
-.sign svg path {
-  fill: white;
-}
-/* text */
-.text {
-  position: absolute;
-  right: 0%;
-  width: 0%;
-  opacity: 0;
-  color: white;
-  font-size: 1.2em;
-  font-weight: 600;
-  transition-duration: .3s;
-}
-/* hover effect on button width */
-.Btn:hover {
-  width: 125px;
-  border-radius: 40px;
-  transition-duration: .3s;
-}
+        .sign svg path {
+            fill: white;
+        }
+        /* text */
+        .text {
+            position: absolute;
+            right: 0%;
+            width: 0%;
+            opacity: 0;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition-duration: .3s;
+        }
+        /* hover effect on button width */
+        .Btn:hover {
+            width: 125px;
+            border-radius: 40px;
+            transition-duration: .3s;
+        }
 
-.Btn:hover .sign {
-  width: 30%;
-  transition-duration: .3s;
-  padding-left: 20px;
-}
-/* hover effect button's text */
-.Btn:hover .text {
-  opacity: 1;
-  width: 70%;
-  transition-duration: .3s;
-  padding-right: 10px;
-}
-/* button click effect*/
-.Btn:active {
-  transform: translate(2px ,2px);
-}
+        .Btn:hover .sign {
+            width: 30%;
+            transition-duration: .3s;
+            padding-left: 20px;
+        }
+        /* hover effect button's text */
+        .Btn:hover .text {
+            opacity: 1;
+            width: 70%;
+            transition-duration: .3s;
+            padding-right: 10px;
+        }
+        /* button click effect*/
+        .Btn:active {
+            transform: translate(2px ,2px);
+        }
+        
+        /* 确保视频全屏覆盖且无滚动条 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
+        }
+        #video {
+            object-fit: contain; /* 保持视频比例 */
+        }
     </style>
 </head>
 <body>
-    <video autoplay="autoplay" muted controls style="width:100%; height:100%;" id="video">
-        <source  src="结尾.mp4" type="video/mp4">
+    <!-- 
+      修改说明：
+      1. playsinline: 允许在移动端（尤其是 iOS）内联播放，防止强制全屏。
+      2. muted: 浏览器自动播放策略的必要条件。
+    -->
+    <video autoplay muted controls playsinline style="width:100%; height:100%;" id="video">
+        <source src="结尾.mp4" type="video/mp4">
     </video>    
+    
     <button class="Btn" onclick="location.href='../homepage/home.html'">
-  
         <span class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></span>
-        
         <span class="text">Skip</span>
-      </button>
+    </button>
+
     <script>
         var v = document.getElementById("video");
+        
+        // 尝试自动播放的 JS 补救措施
+        window.addEventListener('load', function() {
+            var playPromise = v.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // 自动播放成功
+                    console.log("Video started playing automatically");
+                })
+                .catch(error => {
+                    // 自动播放被阻止
+                    console.warn("Autoplay prevented:", error);
+                    // 确保静音再次尝试（虽然标签里已经加了 muted，但双重保险）
+                    v.muted = true;
+                    v.play();
+                });
+            }
+        });
+
         v.addEventListener("ended", function () {
             window.location.href = "../homepage/home.html";
         });

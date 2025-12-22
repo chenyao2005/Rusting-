@@ -3,6 +3,10 @@
     src: url(./白路棒棒手写体.ttf);
 }
 
+/* ===========================
+   1. 基础元素样式 (Base Elements)
+   权重最低，应最先定义
+   =========================== */
 body {
     font-family: "白路棒棒手写体";
     background: url(./background.png) no-repeat center center;
@@ -11,6 +15,26 @@ body {
     background-color: #cccccc; 
 }
 
+/* 这是一个全局标签选择器，建议改为类选择器以避免污染，
+   但为了保持原有逻辑，将其移至此处作为基础样式 */
+img {
+    display: block;
+    position: absolute;
+    left: 231px;
+    top: 51px;
+}
+
+h1 {
+    font-size: 50px;
+    position: relative;
+    left: 800px;
+    top: -700px;
+}
+
+/* ===========================
+   2. 组件/类样式 (Components/Classes)
+   权重中等
+   =========================== */
 .information {
     padding: 20px;
     width: 500px;
@@ -26,6 +50,7 @@ body {
     border-radius: 12px;
     border: 1px solid rgba(168, 18, 18, 0.125);
 }
+
 /* From Uiverse.io by xXJollyHAKERXx */ 
 .spinner {
     position: relative;
@@ -39,31 +64,24 @@ body {
     border-radius: 182px;
     filter: blur(1px);
     box-shadow: 0px -5px 20px 0px rgb(186, 66, 255), 0px 5px 20px 0px rgb(0, 225, 255);
-  }
-  
-  .spinner1 {
+}
+
+.spinner1 {
     background-color: rgb(36, 36, 36);
     width: 360px;
     height: 360px;
     border-radius: 180px;
     filter: blur(10px);
-  }
-  
-  @keyframes spinning82341 {
+}
+
+@keyframes spinning82341 {
     to {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
+}
 
-  img {
-    display: block;
-    position: absolute;
-    left: 231px ;
-    top: 51px;
-  }
-
-  /* 以下为下拉框样式 */
-  .title {
+/* 下拉框逻辑 */
+.title {
     font-size: 50px;
     position: relative;
     left: 800px;
@@ -71,19 +89,21 @@ body {
     cursor: pointer;
 }
 
-.title:hover + .collapse {
-    grid-template-rows: 1fr;
-}
-
+/* 修复点：先定义默认状态 .collapse */
 .collapse {
-  font-size: 25px;
-  width: 900px;
+    font-size: 25px;
+    width: 900px;
     position: relative;
     left: 800px;
     top: -700px;
     display: grid;
-    grid-template-rows: 0fr;
+    grid-template-rows: 0fr; /* 默认闭合 */
     transition: grid-template-rows 0.3s cubic-bezier(0.34, 0.69, 0.1, 1);
+}
+
+/* 修复点：后定义交互状态 :hover，确保能覆盖默认状态 */
+.title:hover + .collapse {
+    grid-template-rows: 1fr; /* 悬停展开 */
 }
 
 .collapse > div {
@@ -91,45 +111,41 @@ body {
     overflow: hidden;
 }
 
-/* games */
-h1 {
-    font-size: 50px;
+/* ===========================
+   3. ID选择器 (IDs)
+   权重最高，最后定义以覆盖通用样式
+   =========================== */
+#LOL {
+    display: block;
     position: relative;
     left: 800px;
     top: -700px;
 }
 
-#LOL {
-  display: block;
-  position:relative;
-  left: 800px;
-  top: -700px;
-}
-
 #HK {
-  display: block;
-  position:relative;
-  left: 1200px;
-  top: -1010px;
+    display: block;
+    position: relative;
+    left: 1200px;
+    top: -1010px;
 }
 
 #player {
-  display: block;
-  position:relative;
-  left: 800px;
-  top: -1000px;
+    display: block;
+    position: relative;
+    left: 800px;
+    top: -1000px;
 }
 
 #Lizijia {
-  display: block;
-  position:relative;
-  left: 1200px;
-  top: -1000px;
+    display: block;
+    position: relative;
+    left: 1200px;
+    top: -1000px;
 }
 
 #SYQ {
-  display: block;
-  position:relative;
-  left: 800px;
-  top: -1300px;
+    display: block;
+    position: relative;
+    left: 800px;
+    top: -1300px;
 }

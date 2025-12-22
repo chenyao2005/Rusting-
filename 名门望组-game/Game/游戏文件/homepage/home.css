@@ -50,7 +50,7 @@
     }
     div.desc {
         text-align: center;
-        font: 12px;
+        font-size: 12px; /* 修复：font简写属性必须包含字体，单写大小应用font-size */
         width: 200px;
         margin: 10px 5px 10px 5px;
     }
@@ -87,26 +87,32 @@
 
 /* From Uiverse.io by lenfear23 */
 button {
-    margin: 12px;
-    height: 70px;
+    /* 布局与尺寸 */
+    display: flex; /* 修复：改为flex以支持 justify-content 和 align-items */
     width: 200px;
-    border-radius: 10px;
-    background: var(--color-shadow-medium); 
+    height: 70px;
+    margin: 12px auto; /* 修复：合并 margin，保留垂直间距并水平居中 */
     justify-content: center;
     align-items: center;
+    
+    /* 边框与背景 */
+    border: none;
+    border-radius: 10px;
+    background: var(--color-shadow-medium);
+    
+    /* 字体与颜色 */
+    font-family: "哥特黑白无常", sans-serif;
+    font-size: 20px;
+    color: var(--color-gray-light);
+    
+    /* 交互与特效 */
+    cursor: pointer;
+    transition: 500ms;
     box-shadow: 
         -5px -5px 15px var(--color-shadow-light),  
         5px 5px 15px var(--color-shadow-dark),    
         inset 5px 5px 10px var(--color-shadow-light),  
-        inset -5px -5px 10px var(--color-shadow-dark); 
-    font-family: "哥特黑白无常", sans-serif;
-    cursor: pointer;
-    border: none;
-    font-size: 20px;
-    color: var(--color-gray-light); 
-    transition: 500ms;
-    display: block;
-    margin: 0 auto;
+        inset -5px -5px 10px var(--color-shadow-dark);
 }
   
 button:hover {
@@ -116,5 +122,5 @@ button:hover {
         inset 5px 5px 10px var(--color-shadow-dark),  
         inset -5px -5px 10px var(--color-shadow-light); 
     color: var(--color-gray-lighter);
-    transition: 500ms;
+    /* transition 已在基础样式中定义，此处无需重复除非需要改变时间 */
 }

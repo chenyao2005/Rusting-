@@ -54,6 +54,7 @@
             width:300px;
             margin-top:50px;
             margin-bottom: 20px;
+            object-fit: cover; /* 增加此属性防止图片比例失调 */
         }
         /* 修改选择器以匹配新的 span 结构 */
         .buttons .save-text {
@@ -73,21 +74,22 @@
 <body>
     <div class="buttons">
         <button onclick="loadGame1()" >
-            <img src="" alt="save1" id="save1img">
+            <!-- 修复：使用 Base64 透明像素作为默认 src，避免空引用报错 -->
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="save1" id="save1img">
             <!-- 将 p 和 h3 替换为 span，避免嵌套语义问题 -->
-            <span id="save1text" class="save-text">save1</span>
+            <span id="save1text" class="save-text">暂无存档</span>
             <span class="save-title">save1</span>
         </button>
         <br>
         <button onclick="loadGame2()">
-            <img src="" alt="save2" id="save2img">
-            <span id="save2text" class="save-text">save1</span>
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="save2" id="save2img">
+            <span id="save2text" class="save-text">暂无存档</span>
             <span class="save-title">save2</span>
         </button>
         <br>
         <button onclick="loadGame3()">
-            <img src="" alt="save3" id="save3img">
-            <span id="save3text" class="save-text">save1</span>
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="save3" id="save3img">
+            <span id="save3text" class="save-text">暂无存档</span>
             <span class="save-title">save3</span>
         </button>
     </div>
