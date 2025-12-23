@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('安全初始化完成');
 });
 
-// 导出函数供HTML使用（如果使用模块化）
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        sanitizeInput,
-        validateUsername,
-        validatePassword,
-        initializeLocalStorage,
-        sanitizeExistingData
-    };
-}
+// // 导出函数供HTML使用（如果使用模块化）
+// if (typeof module !== 'undefined' && module.exports) {
+//     module.exports = {
+//         sanitizeInput,
+//         validateUsername,
+//         validatePassword,
+//         initializeLocalStorage,
+//         sanitizeExistingData
+//     };
+// }

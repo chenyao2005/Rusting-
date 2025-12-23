@@ -72,7 +72,7 @@
 
 <body>
     <div class="buttons">
-        <button onclick="saveGame1()" >
+        <button type="button" onclick="saveGame1()" >
             <!-- 使用透明像素占位，防止空src请求 -->
             <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="save1" id="save1img">
             <!-- 替换 p 和 h3 为 span，并修复原代码中未闭合的 h3 -->
@@ -80,20 +80,20 @@
             <span class="save-title">save1</span>
         </button>
         <br>
-        <button onclick="saveGame2()">
+        <button type="button" onclick="saveGame2()">
             <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="save2" id="save2img">
             <span id="save2text" class="save-text">save1</span>
             <span class="save-title">save2</span>
         </button>
         <br>
-        <button onclick="saveGame3()">
+        <button type="button" onclick="saveGame3()">
             <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="save3" id="save3img">
             <span id="save3text" class="save-text">save1</span>
             <span class="save-title">save3</span>
         </button>
     </div>
     <div class ="setback">
-        <button onclick="BackToGame()">返回游戏</button>
+        <button type="button" onclick="BackToGame()">返回游戏</button>
     </div>
 </body>
 </html>

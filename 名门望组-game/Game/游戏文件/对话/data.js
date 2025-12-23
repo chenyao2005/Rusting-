@@ -1,3 +1,39 @@
+
+function isSafeKey(key, targetObj, isArray = false) {
+    if (key === null || key === undefined) return false;
+    
+    const keyStr = String(key);
+    
+    const dangerousKeys = [
+        '__proto__', 'constructor', 'prototype',
+        'valueOf', 'toString', 'toLocaleString',
+        'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable'
+    ];
+    
+    if (dangerousKeys.includes(keyStr)) {
+        console.warn(`检测到潜在危险的键值访问: ${keyStr}`);
+        return false;
+    }
+    
+    if (isArray && targetObj) {
+        if (!/^\d+$/.test(keyStr)) return false;
+        
+        const index = parseInt(keyStr, 10);
+        if (isNaN(index) || index < 0 || index >= targetObj.length) return false;
+    }
+    
+    return true;
+}
+
+function safeGet(obj, key, defaultValue = null) {
+    if (!obj || !isSafeKey(key, obj, Array.isArray(obj))) {
+        return defaultValue;
+    }
+    
+    const keyStr = String(key);
+    return obj.hasOwnProperty(keyStr) ? obj[keyStr] : defaultValue;
+}
+
 const RESOURCES = {
     // 背景图片
     BACKGROUNDS: {
@@ -2632,6 +2668,18 @@ var textSpeed =parseInt(localStorage.getItem("textSpeed")) || 50;
 var volume = parseInt(localStorage.getItem("volume")) || 100;
 
 function showMessage() {
+    if (!isSafeKey(currentDialogue, dialogues, true)) {
+        console.error(`无效的对话ID: ${currentDialogue}`);
+        currentDialogue = 0;
+    }
+    
+    const currentData = safeGet(dialogues, currentDialogue, {});
+    
+    if (Object.keys(currentData).length === 0) {
+        console.error("无法获取对话数据，ID:", currentDialogue);
+        currentDialogue = 0;
+        return;
+    }
     if (typeof checkAndRecordDialogue === 'function') {
         checkAndRecordDialogue(currentDialogue);
     }
@@ -2693,17 +2741,26 @@ function showMessage() {
         }
     }, 101-textSpeed);
 }
-
 function showOptions() {
-    if (dialogues[currentDialogue].option) {
-        switch (dialogues[currentDialogue].option.length) {
+    // ============ 使用安全访问 ============
+    const currentData = safeGet(dialogues, currentDialogue, {});
+    const options = safeGet(currentData, "option");
+    
+    if (options) {
+        switch (options.length) {
             case 2:
                 document.getElementById("button1").style.display = "inline-block";
                 document.getElementById("button2").style.display = "inline-block";
                 document.getElementById("button1").style.top = "30%";
                 document.getElementById("button2").style.top = "50%";
-                document.getElementById("button1").innerHTML = dialogues[currentDialogue].option[0].text;
-                document.getElementById("button2").innerHTML = dialogues[currentDialogue].option[1].text;
+                
+                // 使用安全访问获取选项文本
+                const option1 = safeGet(options, 0, {});
+                const option2 = safeGet(options, 1, {});
+                
+                document.getElementById("button1").innerHTML = safeGet(option1, "text", "");
+                document.getElementById("button2").innerHTML = safeGet(option2, "text", "");
+                
                 document.getElementById("button1").onclick = function (e) {
                     e.stopPropagation(); // 防止冒泡触发 document 点击
                     selectedOption = 0;
@@ -2717,10 +2774,15 @@ function showOptions() {
                     showMessage();
                 };
                 break;
+                
             case 1:
                 document.getElementById("button1").style.display = "inline-block";
                 document.getElementById("button1").style.top = "40%";
-                document.getElementById("button1").innerHTML = dialogues[currentDialogue].option[0].text;
+                
+                // 使用安全访问获取选项文本
+                const singleOption = safeGet(options, 0, {});
+                document.getElementById("button1").innerHTML = safeGet(singleOption, "text", "");
+                
                 document.getElementById("button2").style.display = "none";
                 document.getElementById("button1").onclick = function (e) {
                     e.stopPropagation();
@@ -2737,13 +2799,16 @@ function showOptions() {
 }
 
 function getNextDialogue(selectedOption) {
-    if (dialogues[currentDialogue].option) {
-        // 确保 selectedOption 有效
+    const currentData = safeGet(dialogues, currentDialogue, {});
+    const options = safeGet(currentData, "option");
+    
+    if (options) {
         if (selectedOption !== undefined && selectedOption !== -1) {
-             currentDialogue = dialogues[currentDialogue].option[selectedOption].next;
+            const optionData = safeGet(options, selectedOption, {});
+            currentDialogue = safeGet(optionData, "next", currentDialogue);
         }
     } else {
-        currentDialogue = dialogues[currentDialogue].next;
+        currentDialogue = safeGet(currentData, "next", currentDialogue);
     }
 }
 
@@ -2774,11 +2839,12 @@ function getBack() {
     showMessage();
 }
 
-// 封装推进对话的核心逻辑
 function advanceDialogue() {
+    const currentData = safeGet(dialogues, currentDialogue, {});
+    
     if (textFullyShown) {
         // 如果有选项，必须点击选项按钮，不能通过点击背景或按空格跳过
-        if (dialogues[currentDialogue].option) {
+        if (safeGet(currentData, "option")) {
             return;
         }
         getNextDialogue();
@@ -2786,7 +2852,7 @@ function advanceDialogue() {
     } else {
         // 立即显示全部文本
         clearInterval(interval);
-        document.getElementById("text").innerHTML = dialogues[currentDialogue].text;
+        document.getElementById("text").innerHTML = safeGet(currentData, "text", "");
         textFullyShown = true;
         CheckCG();
         showOptions();
@@ -2811,29 +2877,32 @@ document.addEventListener('keydown', function(e) {
         advanceDialogue();
     }
 });
-
 function CheckCG(){
-    if(!dialogues[currentDialogue]) return; // 安全检查
+    const currentData = safeGet(dialogues, currentDialogue, {});
+    if(Object.keys(currentData).length === 0) return;
 
-    if(dialogues[currentDialogue].next==300){//坏结局
+    const nextId = safeGet(currentData, "next");
+    const currentId = safeGet(currentData, "id");
+    
+    if(nextId == 300){//坏结局
         location.href = "../video/死亡.html";
     }
-    if(dialogues[currentDialogue].next==600){//结局
+    if(nextId == 600){//结局
         location.href = "../video/结尾.html";
     }
-    if(dialogues[currentDialogue].next==164){//五子棋
+    if(nextId == 164){//五子棋
         location.href = "../五子棋/wuziqi.html";
     }
-    if(dialogues[currentDialogue].next==76){//拼图
+    if(nextId == 76){//拼图
         location.href = "../拼图/pintu.html";
     }
-    if(dialogues[currentDialogue].next==12){//开头穿越
+    if(nextId == 12){//开头穿越
         location.href = "../video/开头穿越.html";
     }
-    if(dialogues[currentDialogue].id==268){//母亲穿越
+    if(currentId == 268){//母亲穿越
         location.href = "../video/母亲穿越.html";
     }
-    if(dialogues[currentDialogue].id==262){//保安穿越
+    if(currentId == 262){//保安穿越
         location.href = "../video/保安穿越.html";
     }
 }
@@ -2856,13 +2925,13 @@ window.addEventListener("load", function () {
     initGame();
 });
 
-// 如果是在 Node 环境中 (Jest运行时)，导出这些变量和函数
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        dialogues,
-        CheckCG,
-        getCurrentDialogue: () => typeof currentDialogue !== 'undefined' ? currentDialogue : 0, 
-        setCurrentDialogue: (val) => { currentDialogue = val },
-        // 导出其他可能的辅助函数
-    };
-}
+// // 如果是在 Node 环境中 (Jest运行时)，导出这些变量和函数
+// if (typeof module !== 'undefined' && module.exports) {
+//     module.exports = {
+//         dialogues,
+//         CheckCG,
+//         getCurrentDialogue: () => typeof currentDialogue !== 'undefined' ? currentDialogue : 0, 
+//         setCurrentDialogue: (val) => { currentDialogue = val },
+//         // 导出其他可能的辅助函数
+//     };
+// }

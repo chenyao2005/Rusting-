@@ -68,20 +68,20 @@
     </div>
     <br>
     <div class="buttons">
-        <button onclick="toStart()">开始游戏</button>
+        <button type="button" onclick="toStart()">开始游戏</button>
         <br>
-        <button onclick="toContinue()">继续游戏</button>
+        <button type="button" onclick="toContinue()">继续游戏</button>
         <br>         
-        <button onclick="window.location.href='../save/load.html'">读取存档</button>
+        <button type="button" onclick="window.location.href='../save/load.html'">读取存档</button>
         <br>
-        <button onclick="window.location.href='./setting.html'">设置</button>
+        <button type="button" onclick="window.location.href='./setting.html'">设置</button>
         <br>
-        <button onclick="window.location.href='../group/group.html'">制作组</button>
+        <button type="button" onclick="window.location.href='../group/group.html'">制作组</button>
         <br>
         <!-- 将音乐按钮放在 buttons 容器内可能导致定位基准问题，
              原代码是 absolute 定位，相对于最近的 relative 父级（.buttons）。
              这里保持 HTML 结构不变，通过 CSS 修改定位策略。 -->
-        <button onclick="togglePlay()" id="music"><img src="./picture_home/music.png" alt="音乐开关"></button>
+        <button type="button" onclick="togglePlay()" id="music"><img src="./picture_home/music.png" alt="音乐开关"></button>
     </div>
 </div>
 </body>
