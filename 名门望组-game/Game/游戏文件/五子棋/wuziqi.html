@@ -1,400 +1,408 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>五子棋</title>
-		<style>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Rusting</title>
+    <style>
+        /* CSS样式保持不变 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+        }
 
+        body {
+            background-color: #1a2028;
+            background-image: 
+                linear-gradient(30deg, rgba(40, 50, 60, 0.3) 12%, transparent 12.5%, transparent 87%, rgba(40, 50, 60, 0.3) 87.5%, rgba(40, 50, 60, 0.3)),
+                linear-gradient(150deg, rgba(40, 50, 60, 0.3) 12%, transparent 12.5%, transparent 87%, rgba(40, 50, 60, 0.3) 87.5%, rgba(40, 50, 60, 0.3)),
+                linear-gradient(30deg, rgba(40, 50, 60, 0.3) 12%, transparent 12.5%, transparent 87%, rgba(40, 50, 60, 0.3) 87.5%, rgba(40, 50, 60, 0.3)),
+                linear-gradient(150deg, rgba(40, 50, 60, 0.3) 12%, transparent 12.5%, transparent 87%, rgba(40, 50, 60, 0.3) 87.5%, rgba(40, 50, 60, 0.3)),
+                linear-gradient(60deg, rgba(60, 70, 80, 0.15) 25%, transparent 25.5%, transparent 75%, rgba(60, 70, 80, 0.15) 75%, rgba(60, 70, 80, 0.15)),
+                linear-gradient(60deg, rgba(60, 70, 80, 0.15) 25%, transparent 25.5%, transparent 75%, rgba(60, 70, 80, 0.15) 75%, rgba(60, 70, 80, 0.15));
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+            color: #c8d0d8;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-			.title{
-				text-align:center;
-			}
-			
-			.chess{
-				display: block;/*块级元素*/
-				margin: 50px auto;
-				box-shadow:5px 5px 5px #B9B9B9,-2px -2px 2px #EFEFEF;
-				cursor: pointer;
-				/* 光标是一个小手 */
-			}
-			div{
-				text-align: center;
-			}
- 
- 
-			
-			.restart{
-				padding: 10px 20px;
-				background-color: #B9B9B9;
-				border-radius: 5px;
-				color: white;
-				cursor: pointer;
-				overflow: hidden;
-			}
-			
-			.restar{
-				padding: 10px 40px;
-				background-color: #B9B9B9;
-				border-radius: 5px;
-				color: white;
-				cursor: pointer;
-			}
-		</style>
-	</head>
-	<body>
-		<h3 class="title">--五子棋--</h3>
-		<!--canvas是一个矩形画布，可以用js在上面绘画，只能设置width和height两个属性-->
-		<canvas class="chess" width="450px" height="450px"></canvas>
-		<div>
-			<!-- <a class="restart" onclick="rst()">重新开始</a> -->
-			<!-- <a class="restar" onclick="save()">保存</a> -->
-			<button class="restar" onclick="saveChess() ">保存</button>
-			<button class="restart " onclick="getSaveChess()">继续</button>
-			<button class="restart" onclick="deleteChess()">重新开始</button>
-		</div>	
-		<div>
-			<button onclick="skip()" style="font-size:20px;margin-top:20px;" >skip</button>
-		</div>
-	</body>
-	
-	<script>
-		var chess = document.getElementsByClassName("chess")[0];
-		 //    我们通过getElementsByClassName得到的是一个数组
- 
-		var title = document.getElementsByClassName("title")[0];
- 
-		var context = chess.getContext("2d");
-		context.strokeStyle="#B9B9B9"
-		
-		window.onload=function(){
-			drawChessBoard();
-		}
-		
-		
-		function drawChessBoard(){
-			
-			for(var i=0;i<15;i++){
-				//moveto起点坐标，lineto终点坐标
-				context.moveTo(15,15+i*30);
-				context.lineTo(435,15+i*30);
-				//连接2点
-				context.stroke();
-				
-				context.moveTo(15+i*30,15);
-				context.lineTo(15+i*30,435);
-				context.stroke();
-				
-			}
-			
-		}
-		
-		
-		//胜利判定数组,这里我设置的三维数组，第一位是x轴的，第二位是y轴的，第三位是第几种方法，下面计算的时候用的位置都是第一个子的位置
-		var wins=[];
-		for(var i=0;i<15;i++){
-			wins[i]=[];
-			for(var j=0;j<15;j++){
-				wins[i][j]=[]
-			}		
-		}
-		
-		//赢法的编号
-		var count=0;
- 
-		//横线赢
-		for(var i=0;i<15;i++){
-			for(var j=0;j<11;j++){
-				for(var k=0;k<5;k++){
-					wins[j+k][i][count]=true;
-				}
-				
-				count++;
-			}
-			
-		}
-		
-		//竖线赢		
-		for(var i=0;i<15;i++){
-			for(var j=0;j<11;j++){
-				for(var k=0;k<5;k++){
-					wins[i][j+k][count]=true;		
-				}				
-				count++;
-			}			
-		}
-		
-		//斜线赢（往右下的）
-		for(var i=0;i<11;i++){
-			for(var j=0;j<11;j++){
-				for(var k=0;k<5;k++){
-					wins[i+k][j+k][count]=true;
-				}
-				count++;
-			}
-		}
-				
-		//斜线（左下往右上）	
-		for(var i=0;i<11;i++){
-			for(var j=14;j>3;j--){
-				for(var k=0;k<5;k++){
-					wins[i+k][j-k][count]=true;
-				}
-				count++;
-			}
-		}
- 
-		
-		//定义二维数组标记棋盘上的每个坐标是否有子
-		var chessboard=[];
-		for(var i=0;i<15;i++){
-			chessboard[i]=[];
-			for(var j=0;j<15;j++){
-				chessboard[i][j]=0;
-			}
-		}
-		// getSaveChess();
-		
-		//下棋
-		var me=true;//用来标记一下人是否可以下棋
-		var over=false;//标记游戏是否结束
-		
-		var myWin=[];//记录用户在赢法上的分值
-		var computerWin=[];//记录计算机在赢法上的分值
-		for(var i=0;i<count;i++){
-			myWin[i]=0;
-			computerWin[i]=0;
-		}
-		
-		chess.onclick=function(e){
-			 //如果游戏结束不可以下棋,判断人是否可以下棋
-			 if(over||!me){
-                    return;
-                }
-			
-			//获取x轴坐标，怕他点的位置不准确，你要让它也能选到地方
-			var x=e.offsetX;
-			
-			//获取Y轴坐标
-			var y=e.offsetY;
-			
-			var i = Math.floor(x/30);//意思是强行向下取。1.3取1,因为取点不可能点的很准
-			var j = Math.floor(y/30);
- 
-			if(chessboard[i][j]==0){//这个是表示如果这个地方标记的是0，没有下子，那么这里就可以下一个
-				
-				//下一个子
-				oneStep(i,j,me);
-				//标记已经落子
-				chessboard[i][j]=1;
-				
-				for(var k=0;k<count;k++){
-					if(wins[i][j][k]){
-						
-						myWin[k]++;
- 
-						if(myWin[k]==5){
-							title.innerHTML="恭喜你赢了！！！"
-							over=true;
-							localStorage.setItem("CD", 163);
-							location.href="../对话/dialogue.html";
-						}
-					}
-					
-				}
-				
-			}else {
-				alert("不能下")
-				return
-			}
-			
- 
-			if(!over){
-				me=!me;
-			}
-			//计算机落子
-			computerAI()
-		}
-		
-		
-		function computerAI(){
-			//我采用的是分值方法让计算机明白，当我有4个连在一起快5个了，你要拦截我下，看谁的分值高，如果计算机分值高他就下自己的，如果人分值高，那就拦截我下的
-			
-			//空白子在用户所占用赢法上的分值
-			var myScore=[];
-			//空白子在计算机所占用赢法上的分值
-			var computerScore=[];
-			
-			for(var i=0;i<15;i++){
-				
-				myScore[i]=[];
-				computerScore[i]=[];
-				
-				for(var j=0;j<15;j++){
-					myScore[i][j]=0
-					computerScore[i][j]=0;
-				}
-				
-			}
-		//空白字的最大分值
-		var max=0;
-			//最大分值空白字所在的坐标
-			var x=0,y=0;
-			
-			for(var i=0;i<15;i++){
-				for(var j=0;j<15;j++){
-					//判断是否是空白子				
-					if(chessboard[i][j]==0){
-						
-						for(var k=0;k<count;k++){
-							if(wins[i][j][k]){
-								
-								if(myWin[k]==1){
-									myScore[i][j]+=200;
-								}else if(myWin[k]==2){
-									myScore[i][j]+=4000;
-								}else if(myWin[k]==3){
-									myScore[i][j]+=20000;
-								}else if(myWin[k]==4){
-									myScore[i][j]+=100000;
-								}
-								
-								if(computerWin[k]==1){
-									computerScore[i][j]+=220;
-								}else if(computerWin[k]==2){
-									computerScore[i][j]+=5200;
-								}else if(computerWin[k]==3){
-									computerScore[i][j]+=22000;
-								}else if(computerWin[k]==4){
-									computerScore[i][j]+=200000;
-								}
-								
-							}
-							
-						}
-						
-						if(myScore[i][j]>max){
-							max=myScore[i][j];
-							x=i;
-							y=j;
-						}else if(myScore[i][j]==max){
-							if(computerScore[i][j]>max){
-								max=computerScore[i][j];
-								x=i;
-								y=j;
-							}						
-						}
-						
-						if(computerScore[i][j]>max){
-							max=computerScore[i][j];
-							x=i;
-							y=j;
-						}else if(computerScore[i][j]==max){
-							if(myScore[i][j]>max){
-								max=myScore[i][j];
-								x=i;
-								y=j;
-							}
-						}
-						
-						
-					}
-					
-				}
-				
-			}
-			
-			//判断完就让她落子
-			oneStep(x,y,me);
- 
-			//落子后要他显示这个地方是落子的了
-			chessboard[x][y]=2;
-			
-			for(var k=0;k<count;k++){
-				if(wins[x][y][k]){
-					computerWin[k]+=1;
-					if(computerWin[k]==5){
-						title.innerHTML="抱歉计算机赢了！！"
-						over=true;
-					}
-				}
-			}
-			
-			if(!over){
-				me=!me;
-			}
-			
-			
-			
-		}
-		
-		
-		//落子的方法
-		function oneStep(i,j,me){
-			//把前面的草稿清除一下
-			context.beginPath();
-			
-			context.arc(15+i*30,15+j*30,13,0,2*Math.PI);
-			//画⚪，2*Math.PI是2Π的意思，0是3点钟方向，13半径
-			
-			context.closePath();
-			
-			var yanse;
-                    if(me){
-                        yanse="black";
-                    }else{
-                        yanse="red";
-                    }
-                    context.fillStyle=yanse;
-                    context.fill();
-                
-                
-                }
-			
- 
-		//刷新浏览器
-				function rst(){
-			window.location.reload();
-		}
-		// 保存
-		  function saveChess() {
-			  //获取本地存储对象
-   let storage = window.localStorage;
-   // 将棋盘写进本地存储
-   storage.setItem("chess", JSON.stringify(chessboard));
-   alert("保存成功")
-  }
-  // 获取记录
-  function getSaveChess() {
-	   //获取本地存储对象
-   let storage = window.localStorage;
-   //将本地存储中的chess取出来，因为取出的东西是json形式
-   let chess = storage.getItem('chess')
-   //所以要判断取出的值是不是空或null
-   if(chess != null && chess != ''){
-	   //将json格式转换成对象
-    chessboard = JSON.parse(chess)
-	//下面两个for循环是重新渲染棋盘
-    for(let i = 0; i < chessboard.length; i++){
-      for(let j = 0; j < chessboard[i].length; j++ ){
-        if(chessboard[i][j]==1) {
- 
-          oneStep(i, j, true)
-        }else if(chessboard[i][j]==2){
-			oneStep(i, j, false)
-		}
+        /* 老旧工业元素装饰 */
+        .factory-decoration {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        .rust-pipe {
+            position: absolute;
+            background: linear-gradient(90deg, #5d4c3c, #8b7355, #5d4c3c);
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .rust-pipe-1 {
+            width: 300px;
+            height: 25px;
+            top: 10%;
+            right: 8%;
+            transform: rotate(20deg);
+            opacity: 0.4;
+        }
+
+        .rust-pipe-2 {
+            width: 220px;
+            height: 20px;
+            bottom: 15%;
+            left: 8%;
+            transform: rotate(-15deg);
+            opacity: 0.4;
+        }
+
+        .old-gear {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background-color: #3a3a3a;
+            border-radius: 50%;
+            border: 8px solid #5d4c3c;
+            opacity: 0.2;
+            animation: slow-rotate 40s linear infinite;
+        }
+
+        .old-gear:before, .old-gear:after {
+            content: '';
+            position: absolute;
+            background-color: #5d4c3c;
+        }
+
+        .old-gear:before {
+            width: 100%;
+            height: 20px;
+            top: 25px;
+            left: 0;
+        }
+
+        .old-gear:after {
+            width: 20px;
+            height: 100%;
+            top: 0;
+            left: 25px;
+        }
+
+        @keyframes slow-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .old-gear-1 {
+            top: 18%;
+            left: 5%;
+            animation-duration: 50s;
+        }
+
+        .old-gear-2 {
+            bottom: 20%;
+            right: 10%;
+            animation-duration: 45s;
+            animation-direction: reverse;
+        }
+
+        .rust-stain {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            background: radial-gradient(ellipse at center, rgba(139, 69, 19, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .rust-stain-1 {
+            top: 30%;
+            left: 15%;
+        }
+
+        .rust-stain-2 {
+            bottom: 25%;
+            right: 20%;
+        }
+
+        .container {
+            max-width: 900px;
+            min-height: calc(100vh - 40px);
+            margin: 0 auto;
+            background-color: rgba(40, 45, 50, 0.92);
+            border: 8px solid #5d4c3c;
+            border-radius: 4px;
+            box-shadow: 
+                0 0 40px rgba(0, 0, 0, 0.7),
+                inset 0 0 60px rgba(0, 0, 0, 0.9);
+            padding: 25px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(100, 80, 60, 0.05) 2px,
+                rgba(100, 80, 60, 0.05) 4px
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 48px;
+            color: #d4c4a8;
+            text-shadow: 
+                3px 3px 0 #3a3025,
+                6px 6px 0 #1a1a1a;
+            margin: 10px 0 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #8b7355;
+            letter-spacing: 3px;
+            font-weight: bold;
+            position: relative;
+            font-family: 'SimHei', 'Microsoft YaHei', sans-serif;
+        }
+
+        .title:after {
+            content: "工业控制室";
+            position: absolute;
+            font-size: 16px;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #a08c6c;
+            font-weight: normal;
+            text-shadow: 1px 1px 2px #000;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .chess-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: rgba(30, 35, 40, 0.8);
+            border-radius: 6px;
+            border: 4px solid #5d4c3c;
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .chess {
+            display: block;
+            box-shadow: 
+                0 0 0 10px #5d4c3c,
+                0 0 0 12px #3a3025,
+                15px 15px 25px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            background-color: #a08c6c;
+            border-radius: 2px;
+            border: 1px solid #5d4c3c;
+        }
+
+        .btn-skip {
+            padding: 18px 50px;
+            background: linear-gradient(to bottom, #8b7355, #5d4c3c);
+            color: #e8e0d0;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            box-shadow: 
+                0 6px 0 #3a3025,
+                0 8px 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+            font-family: 'SimHei', 'Microsoft YaHei', sans-serif;
+        }
+
+        .btn-skip:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 0 #3a3025,
+                0 12px 20px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(to bottom, #9c8464, #6d5c4c);
+        }
+
+        .btn-skip:active {
+            transform: translateY(2px);
+            box-shadow: 
+                0 4px 0 #3a3025,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-skip:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-skip:hover:before {
+            left: 100%;
+        }
+
+        .status {
+            font-size: 26px;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, rgba(50, 45, 40, 0.9), rgba(60, 55, 50, 0.9));
+            border-radius: 6px;
+            border: 4px solid #8b7355;
+            margin-bottom: 30px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f0e6d2;
+            text-shadow: 2px 2px 3px #000;
+            font-weight: bold;
+            box-shadow: 
+                inset 0 0 25px rgba(0, 0, 0, 0.7),
+                0 0 15px rgba(0, 0, 0, 0.5);
+            font-family: 'SimHei', 'Microsoft YaHei', sans-serif;
+        }
+
+        .factory-stamp {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: #8b7355;
+            font-size: 14px;
+            opacity: 0.7;
+            transform: rotate(-3deg);
+            font-family: monospace;
+            letter-spacing: 1px;
+            border: 1px solid #8b7355;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                min-height: auto;
+            }
+            
+            .title {
+                font-size: 36px;
+                margin-bottom: 20px;
+            }
+            
+            .game-area {
+                gap: 20px;
+            }
+            
+            .chess {
+                width: 350px;
+                height: 350px;
+            }
+            
+            .btn-skip {
+                font-size: 20px;
+                padding: 16px 40px;
+            }
+            
+            .status {
+                font-size: 22px;
+                padding: 15px;
+            }
+        }
         
-      }
-    }
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .title {
+                font-size: 28px;
+            }
+            
+            .chess {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .btn-skip {
+                font-size: 18px;
+                padding: 14px 30px;
+            }
+        }
+        
+        /* 确保棋盘适应容器 */
+        canvas.chess {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- 老旧工业装饰元素 -->
+    <div class="rust-pipe rust-pipe-1"></div>
+    <div class="rust-pipe rust-pipe-2"></div>
+    <div class="old-gear old-gear-1"></div>
+    <div class="old-gear old-gear-2"></div>
+    <div class="rust-stain rust-stain-1"></div>
+    <div class="rust-stain rust-stain-2"></div>
     
-   }
-}
-		function deleteChess() {
-			//获取本地存储对象，设置chess为空
-			var t = localStorage
-			t.setItem('chess','')
-			//刷新页面
-			window.location.reload();
-		}
-	</script>
-	<script src="wuziqi.js"></script>
+    <div class="container">
+        <h1 class="title">五子棋</h1>
+        
+        <div class="status" id="gameStatus">-- 轮到您下棋 (黑子) --</div>
+        
+        <div class="game-area">
+            <div class="chess-container">
+                <canvas class="chess" width="450" height="450"></canvas>
+            </div>
+            
+            <button type="button" class="btn-skip" onclick="skip()">跳过游戏</button>
+        </div>
+        
+        <div class="factory-stamp">第023号控制室</div>
+    </div>
+
+    <!-- 引用外部JS文件 -->
+    <script src="wuziqi.js"></script>
+</body>
 </html>

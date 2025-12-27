@@ -6,36 +6,50 @@
     <title>Rusting</title>
     <link type="text/css" rel="stylesheet" href="css.css" /> 
     <script src="data.js"></script>
+    <script src="journal.js"></script> 
 </head>
 <body>
-    <style>
-        @media screen and (max-width: 1000px) {
-            #text{
-                text-overflow:ellipsis;
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;  
-                line-clamp:3;
-                -webkit-box-orient: vertical;
-            }
-            }
-            .saylihui{
-                transform: translate(0, -200px);
-                width:30%;
-                height: auto;
-            }
-    </style>
-    <img id="background" src="">
+    <!-- 使用透明像素占位，等待JS加载真实图片 -->
+    <img id="background" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+    
     <div id="content">
-        <img src="" alt="lihui" class="saylihui" id="saylihui">
-        <img src="" alt="lihui" class="backlihui" id="backlihui">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="lihui" class="saylihui" id="saylihui">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="lihui" class="backlihui" id="backlihui">
+        
         <h1 class="name" id="name"></h1>    
-        <p  class="text" id="text"></p>
-        <p class="setting"><a onclick="getBack()" style="cursor: pointer;">上一页</a>&nbsp;&nbsp;<a onclick="save()" style="cursor: pointer;">保存</a> &nbsp;&nbsp;<a onclick="toSetting()" style="cursor: pointer;">设置</a> &nbsp;&nbsp;<a href="..\homepage\home.html" style="text-decoration: none;color: #ffffff;
-    -webkit-text-stroke: 0.3px #000000;" onclick="toHome()">主菜单</a></p>
+        <p class="text" id="text"></p>
+        
+        <p class="setting">
+            <!-- 使用 action-link 类替代内联 style="cursor: pointer;" -->
+            <a onclick="getBack()" class="action-link">上一页</a>&nbsp;&nbsp;
+            <a onclick="save()" class="action-link">保存</a> &nbsp;&nbsp;
+            <a onclick="openJournal()" class="action-link">剧情日志</a> &nbsp;&nbsp;
+            <a onclick="toSetting()" class="action-link">设置</a> &nbsp;&nbsp;
+            <!-- 主菜单链接样式已提取到 .action-link -->
+            <a onclick="confirmExit()" class="action-link">主菜单</a>
+        </p>
     </div>        
-        <button class="button" id="button1">按钮1</button>
-        <button class="button" id="button2">按钮2</button>
-        <audio id="music"></audio>
+    
+    <button class="button" id="button1">按钮1</button>
+    <button class="button" id="button2">按钮2</button>
+    <audio id="music"></audio>
+
+    <script>
+        function confirmExit() {
+            if (confirm("确定要返回主菜单吗？\n未保存的进度可能会丢失，建议先点击“保存”。")) {
+                if (typeof toHome === 'function') {
+                    toHome();
+                } else {
+                    // 如果没有定义toHome，直接跳转
+                    window.location.href = "../homepage/home.html";
+                }
+            }
+        }
+        
+        // 确保 toHome 函数存在，如果 home.html 中的脚本未定义它
+        function toHome() {
+             window.location.href = "../homepage/home.html";
+        }
+    </script>
 </body>
 </html>

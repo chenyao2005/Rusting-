@@ -1,177 +1,284 @@
-@font-face {
-    font-family: "哥特黑白无常";
-    src: url(./哥特黑白无常.ttf);
+:root {
+    --color-white: #FFFFFF;
+    --color-white-dim: rgba(255, 255, 255, 0.1);
+    --color-black: #000000;
+    --color-shadow-dark: rgba(0, 0, 0, 1);
+    --color-shadow-light: rgba(255, 255, 255, 0.4);
+    --input-font-size: 24px;
+    --label-font-size: 20px;
 }
 
 body {
-    background-image: url('../group/backgroud.jpg');
+    background-image: url('../homepage/picture_home/desk.jpg');
     background-size: cover;
-    font-family: "哥特黑白无常", sans-serif;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: "Arial", "Helvetica", sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.container {
+/* 主容器 - 垂直排列所有元素 */
+.main-container {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    padding: 20px;
+    gap: 25px; /* 每个元素之间的间距 */
+}
+
+/* 用户名组 */
+.username-group {
     position: relative;
-    top: 250px;
-    margin: 0 auto;
     width: 300px;
-    height: 450px;
-    color: white;
-  }
-  
-  .container .label {
-    font-size: 32px;
+    height: 85px; /* 60px输入框 + 25px错误提示空间 */
+}
+
+.username-label {
+    font-size: var(--label-font-size);
     padding-left: 10px;
     position: absolute;
-    top: 13px;
-    transition: 0.3s;
+    top: 20px;
+    left: 0;
+    transition: all 0.3s ease;
     pointer-events: none;
-  }
-  
-  .input {
-    width: 300px;
+    opacity: 0.7;
+    font-family: "Arial", "Helvetica", sans-serif;
+    color: var(--color-white);
+    z-index: 1;
+}
+
+.username-input {
+    width: 100%;
     height: 60px;
     border: none;
     outline: none;
-    padding: 0px 7px;
+    padding: 0px 12px;
     border-radius: 6px;
-    color: #fff;
-    font-size: 30px;
+    color: var(--color-white);
+    font-size: var(--input-font-size);
+    font-family: "Arial", "Helvetica", sans-serif;
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .input:focus {
-    border: 2px solid transparent;
-    color: #fff;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .container .input:valid ~ .label,
-  .container .input:focus ~ .label {
-    transition: 0.3s;
-    padding-left: 2px;
-    transform: translateY(-50px);
-  }
-  
-  .container .input:valid,
-  .container .input:focus {
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
 
-  .password {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+.username-input:focus {
+    border: 2px solid transparent;
+    color: var(--color-white);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
+
+/* 修正：和landing.css一样的标签消失逻辑 */
+.username-input:valid ~ .username-label,
+.username-input:focus ~ .username-label {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0);
+}
+
+/* 密码组 */
+.password-group {
     position: relative;
-    top: -80px;
-    margin: 0 auto;
     width: 300px;
-    height: 450px;
-    color: white;
-  }
-  
-  .password .label2 {
-    font-size: 32px;
+    height: 85px; /* 60px输入框 + 25px错误提示空间 */
+}
+
+.password-label {
+    font-size: var(--label-font-size);
     padding-left: 10px;
     position: absolute;
-    top: 13px;
-    transition: 0.3s;
+    top: 20px;
+    left: 0;
+    transition: all 0.3s ease;
     pointer-events: none;
-  }
-  
-  .input2 {
-    width: 300px;
-    height: 60px;
-    border: none;
-    outline: none;
-    padding: 0px 7px;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 30px;
-    background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .input2:focus {
-    border: 2px solid transparent;
-    color: #fff;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .password .input2:valid ~ .label2,
-  .password .input2:focus ~ .label2 {
-    transition: 0.3s;
-    padding-left: 2px;
-    transform: translateY(-50px);
-  }
-  
-  .password .input2:valid,
-  .password .input2:focus {
-    box-shradow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    opacity: 0.7;
+    font-family: "Arial", "Helvetica", sans-serif;
+    color: var(--color-white);
+    z-index: 1;
+}
 
-  .login-button {
-    display: block;
-    position: relative;
-    margin: auto;
-    top: -405px;
+.password-input {
+    width: 100%;
+    height: 60px;
+    border: none;
+    outline: none;
+    padding: 0px 12px;
+    border-radius: 6px;
+    color: var(--color-white);
+    font-size: var(--input-font-size);
+    font-family: "Arial", "Helvetica", sans-serif;
+    background-color: transparent;
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.password-input:focus {
+    border: 2px solid transparent;
+    color: var(--color-white);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
+
+/* 修正：和landing.css一样的标签消失逻辑 */
+.password-input:valid ~ .password-label,
+.password-input:focus ~ .password-label {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0);
+}
+
+/* 按钮样式 */
+.register-button {
     width: 300px;
     height: 60px;
     border: none;
     outline: none;
     border-radius: 6px;
-    color: #fff;
-    font-size: 30px;
-    font-family: "哥特黑白无常";
+    color: var(--color-white);
+    font-size: 22px;
+    font-family: "Arial", "Helvetica", sans-serif;
+    font-weight: bold;
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    margin-top: 5px;
 }
 
-.login-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.register-button:hover {
+    background-color: var(--color-white-dim);
 }
 
-.login-button:active {
-    box-shadow: inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+.register-button:active {
+    box-shadow: 
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
 }
 
-.newcount-button {
-  display: block;
-  position: relative;
-  margin: auto;
-  top: -345px;
-  width: 300px;
-  height: 60px;
-  border: none;
-  outline: none;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 30px;
-  font-family: "哥特黑白无常";
-  background-color: transparent;
-  box-shadow: 3px 3px 10px rgba(0,0,0,1),
-  -1px -1px 6px rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: 0.3s;
+.back-button {
+    width: 300px;
+    height: 60px;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    color: var(--color-white);
+    font-size: 22px;
+    font-family: "Arial", "Helvetica", sans-serif;
+    font-weight: bold;
+    background-color: transparent;
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+}
+
+.back-button:hover {
+    background-color: var(--color-white-dim);
+}
+
+.back-button:active {
+    box-shadow: 
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
+
+/* 错误信息样式 - 黑底红字 */
+.error-message {
+    position: absolute;
+    top: 65px; /* 在输入框正下方 */
+    left: 0;
+    font-size: 14px;
+    color: #ff6b6b;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 10;
+    display: none;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    width: 280px;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    box-sizing: border-box;
+}
+
+/* 错误状态的输入框 */
+.username-input.error,
+.password-input.error {
+    box-shadow: 
+        3px 3px 10px rgba(255, 107, 107, 0.5),
+        -1px -1px 6px rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 107, 107, 0.8);
+    animation: shake 0.3s ease;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-5px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .main-container {
+        width: 90%;
+        padding: 10px;
+    }
+    
+    .username-group,
+    .password-group {
+        width: 100%;
+    }
+    
+    .username-input,
+    .password-input,
+    .register-button,
+    .back-button {
+        width: 100%;
+        font-size: 20px;
+    }
+    
+    .error-message {
+        width: calc(100% - 20px);
+    }
+    
+    .username-label,
+    .password-label {
+        font-size: 18px;
+    }
 }

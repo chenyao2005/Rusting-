@@ -1,83 +1,126 @@
-@media (max-width:1000px) {
-  body {font-size: 6px;}
+/* 添加统一的CSS变量定义 */
+:root {
+    /* 主色调 - 白色系 */
+    --color-white: #FFFFFF;
+    --color-white-dim: rgba(255, 255, 255, 0.1);
+    --color-gray-light: #A1A1A1;
+    --color-gray-lighter: #D6D6D6;
+    --color-gray-medium: #666666;
+    
+    /* 黑色系 */
+    --color-black: #000000;
+    --color-gray-dark: #2C2C2C;
+    --color-gray-darker: #1A1A1A;
+    --color-gray-darkest: #111111;
+    
+    /* 按钮阴影颜色 */
+    --color-shadow-dark: #222222;
+    --color-shadow-medium: #333333;
+    --color-shadow-light: #444444;
+    
+    /* 特殊颜色 */
+    --color-accent-blue: rgba(38, 0, 255, 0.4);
+    --color-accent-green: #44D8A4;
+    --color-accent-teal: #568FA6;
+    
+    /* 背景色 */
+    --color-bg-dark: rgba(26, 26, 26, 0.5);
+    --color-bg-darker: rgba(41, 41, 41, 0.5);
+}
 
-  div #images {
-      width: 100%;
-  }
-  div.img {
-      margin: 3px;
-      float: left;
-      text-align: center;
-  }
-  div.img a img {
-      display: inline-block;
-      margin: 3px;
-      width: 200px;
-      height: 200px;
-  }
-  div.img a:hover img {
-      transform: none;
-  }
-  div.desc {
-      text-align: center;
-      font: 12px ;
-      width: 200px;
-      margin: 10px 5px 10px 5px;
-  }
-  #main{height: auto;}
+@media (max-width:1000px) {
+    body {font-size: 6px;}
+    
+    div #images {
+        width: 100%;
+    }
+    div.img {
+        margin: 3px;
+        float: left;
+        text-align: center;
+    }
+    div.img a img {
+        display: inline-block;
+        margin: 3px;
+        width: 200px;
+        height: 200px;
+    }
+    div.img a:hover img {
+        transform: none;
+    }
+    div.desc {
+        text-align: center;
+        font-size: 12px; /* 修复：font简写属性必须包含字体，单写大小应用font-size */
+        width: 200px;
+        margin: 10px 5px 10px 5px;
+    }
+    #main{height: auto;}
 }
 
 @font-face {
-    font-family: "哥特黑白无常";
+    font-family: "哥特黑白无常", sans-serif;
     src: url(./哥特黑白无常.ttf);
 }
-#bg{
-    margin:auto;
-    width:100%;
+
+#bg {
+    margin: auto;
+    width: 100%;
     height: 100%;
-    position:absolute;
-    bottom:0;
-    left:0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     background-image: url(./picture_home/desk.jpg);
     background-size: 100% 100%;
 }
-#title{
+
+#title {
     height: 150px;
     position: relative;
-    font-size:50px;
-    font-family: "哥特黑白无常";
-    ;
+    font-size: 50px;
+    font-family: "哥特黑白无常", sans-serif;
 }
 
-.buttons{
+.buttons {
     position: relative;
     font-size: 30px;
 }
 
-/* From Uiverse.io by lenfear23 */ 
-button{
-    margin: 12px;
-    height: 70px;
+/* From Uiverse.io by lenfear23 */
+button {
+    /* 布局与尺寸 */
+    display: flex; /* 修复：改为flex以支持 justify-content 和 align-items */
     width: 200px;
-    border-radius: 10px;
-    background: #333;
+    height: 70px;
+    margin: 12px auto; /* 修复：合并 margin，保留垂直间距并水平居中 */
     justify-content: center;
     align-items: center;
-    box-shadow: -5px -5px 15px #444, 5px 5px 15px #222, inset 5px 5px 10px #444,
-      inset -5px -5px 10px #222;
-    font-family: "哥特黑白无常";
-    cursor: pointer;
+    
+    /* 边框与背景 */
     border: none;
+    border-radius: 10px;
+    background: var(--color-shadow-medium);
+    
+    /* 字体与颜色 */
+    font-family: "哥特黑白无常", sans-serif;
     font-size: 20px;
-    color: rgb(161, 161, 161);
+    color: var(--color-gray-light);
+    
+    /* 交互与特效 */
+    cursor: pointer;
     transition: 500ms;
-    display: block;margin: 0 auto;
-  }
+    box-shadow: 
+        -5px -5px 15px var(--color-shadow-light),  
+        5px 5px 15px var(--color-shadow-dark),    
+        inset 5px 5px 10px var(--color-shadow-light),  
+        inset -5px -5px 10px var(--color-shadow-dark);
+}
   
-  button:hover {
-    box-shadow: -5px -5px 15px #444, 5px 5px 15px #222, inset 5px 5px 10px #222,
-      inset -5px -5px 10px #444;
-    color: #d6d6d6;
-    transition: 500ms;
-  }
-  
+button:hover {
+    box-shadow: 
+        -5px -5px 15px var(--color-shadow-light),  
+        5px 5px 15px var(--color-shadow-dark),  
+        inset 5px 5px 10px var(--color-shadow-dark),  
+        inset -5px -5px 10px var(--color-shadow-light); 
+    color: var(--color-gray-lighter);
+    /* transition 已在基础样式中定义，此处无需重复除非需要改变时间 */
+}

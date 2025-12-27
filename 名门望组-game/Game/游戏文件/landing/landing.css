@@ -1,12 +1,22 @@
+:root {
+    --color-white: #FFFFFF;
+    --color-white-dim: rgba(255, 255, 255, 0.1);
+    --color-black: #000000;
+    --color-shadow-dark: rgba(0, 0, 0, 1);
+    --color-shadow-light: rgba(255, 255, 255, 0.4);
+    --input-font-size: 24px;
+    --label-font-size: 20px;
+}
+
 @font-face {
-    font-family: "哥特黑白无常";
+    font-family: "哥特黑白无常", sans-serif;
     src: url(./哥特黑白无常.ttf);
 }
 
 body {
     background-image: url(../homepage/picture_home/desk.jpg);
     background-size: cover;
-    font-family: "哥特黑白无常";
+    font-family: "Arial", "Helvetica", sans-serif; /* 使用系统内置字体 */
 }
 
 .container {
@@ -18,57 +28,55 @@ body {
     margin: 0 auto;
     width: 300px;
     height: 450px;
-    color: white;
-  }
-  
-  .container .label {
-    font-size: 32px;
+    color: var(--color-white);
+}
+
+.container .label {
+    font-size: var(--label-font-size);
     padding-left: 10px;
     position: absolute;
-    top: 13px;
-    transition: 0.3s;
+    top: 20px;
+    transition: all 0.3s ease;
     pointer-events: none;
-  }
-  
-  .input {
+    opacity: 0.7; /* 初始半透明 */
+    font-family: "Arial", "Helvetica", sans-serif;
+}
+
+.input {
     width: 300px;
     height: 60px;
     border: none;
     outline: none;
-    padding: 0px 7px;
+    padding: 0px 12px;
     border-radius: 6px;
-    color: #fff;
-    font-size: 30px;
+    color: var(--color-white);
+    font-size: var(--input-font-size);
+    font-family: "Arial", "Helvetica", sans-serif; /* 输入框使用系统字体 */
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .input:focus {
-    border: 2px solid transparent;
-    color: #fff;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .container .input:valid ~ .label,
-  .container .input:focus ~ .label {
-    transition: 0.3s;
-    padding-left: 2px;
-    transform: translateY(-50px);
-  }
-  
-  .container .input:valid,
-  .container .input:focus {
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+}
 
-  .password {
+.input:focus {
+    border: 2px solid transparent;
+    color: var(--color-white);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
+
+/* 修改：聚焦或有效时标签消失 */
+.container .input:valid ~ .label,
+.container .input:focus ~ .label {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0); /* 不移到上面，直接消失 */
+}
+
+.password {
     display: flex;
     flex-direction: column;
     gap: 7px;
@@ -77,57 +85,55 @@ body {
     margin: 0 auto;
     width: 300px;
     height: 450px;
-    color: white;
-  }
-  
-  .password .label2 {
-    font-size: 32px;
+    color: var(--color-white);
+}
+
+.password .label2 {
+    font-size: var(--label-font-size);
     padding-left: 10px;
     position: absolute;
-    top: 13px;
-    transition: 0.3s;
+    top: 20px;
+    transition: all 0.3s ease;
     pointer-events: none;
-  }
-  
-  .input2 {
+    opacity: 0.7; /* 初始半透明 */
+    font-family: "Arial", "Helvetica", sans-serif;
+}
+
+.input2 {
     width: 300px;
     height: 60px;
     border: none;
     outline: none;
-    padding: 0px 7px;
+    padding: 0px 12px;
     border-radius: 6px;
-    color: #fff;
-    font-size: 30px;
+    color: var(--color-white);
+    font-size: var(--input-font-size);
+    font-family: "Arial", "Helvetica", sans-serif; /* 输入框使用系统字体 */
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .input2:focus {
-    border: 2px solid transparent;
-    color: #fff;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
-  
-  .password .input2:valid ~ .label2,
-  .password .input2:focus ~ .label2 {
-    transition: 0.3s;
-    padding-left: 2px;
-    transform: translateY(-50px);
-  }
-  
-  .password .input2:valid,
-  .password .input2:focus {
-    box-shradow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4),
-    inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-  }
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+}
 
-  .login-button {
+.input2:focus {
+    border: 2px solid transparent;
+    color: var(--color-white);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light),
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
+
+/* 修改：聚焦或有效时标签消失 */
+.password .input2:valid ~ .label2,
+.password .input2:focus ~ .label2 {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0); /* 不移到上面，直接消失 */
+}
+
+.login-button {
     display: block;
     position: relative;
     margin: auto;
@@ -137,50 +143,91 @@ body {
     border: none;
     outline: none;
     border-radius: 6px;
-    color: #fff;
-    font-size: 30px;
-    font-family: "哥特黑白无常";
+    color: var(--color-white);
+    font-size: 22px; /* 减小字体大小 */
+    font-family: "Arial", "Helvetica", sans-serif; /* 使用系统字体 */
+    font-weight: bold; /* 加粗，更清晰 */
     background-color: transparent;
-    box-shadow: 3px 3px 10px rgba(0,0,0,1),
-    -1px -1px 6px rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
     cursor: pointer;
     transition: 0.3s;
 }
 
 .login-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--color-white-dim);
 }
 
 .login-button:active {
-    box-shadow: inset 3px 3px 10px rgba(0,0,0,1),
-    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
 }
 
 .newcount-button {
-  display: block;
-  position: relative;
-  margin: auto;
-  top: -345px;
-  width: 300px;
-  height: 60px;
-  border: none;
-  outline: none;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 30px;
-  font-family: "哥特黑白无常";
-  background-color: transparent;
-  box-shadow: 3px 3px 10px rgba(0,0,0,1),
-  -1px -1px 6px rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: 0.3s;
+    display: block;
+    position: relative;
+    margin: auto;
+    top: -345px;
+    width: 300px;
+    height: 60px;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    color: var(--color-white);
+    font-size: 22px; /* 减小字体大小 */
+    font-family: "Arial", "Helvetica", sans-serif; /* 使用系统字体 */
+    font-weight: bold; /* 加粗，更清晰 */
+    background-color: transparent;
+    box-shadow: 
+        3px 3px 10px var(--color-shadow-dark),
+        -1px -1px 6px var(--color-shadow-light);
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .newcount-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--color-white-dim);
 }
 
 .newcount-button:active {
-  box-shadow: inset 3px 3px 10px rgba(0,0,0,1),
-  inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+    box-shadow: 
+        inset 3px 3px 10px var(--color-shadow-dark),
+        inset -1px -1px 6px var(--color-shadow-light);
+}
+
+/* 错误信息样式 - 修正位置 */
+.error-message {
+    position: absolute;
+    top: 65px; /* 在输入框下方紧挨着 */
+    left: 10px;
+    font-size: 14px;
+    color: #ff6b6b;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 10;
+    display: none;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    width: 280px; /* 与输入框宽度匹配 */
+}
+
+/* 密码框的错误信息也使用相同的位置 */
+.password .error-message {
+    top: 65px; /* 与用户名错误信息相同位置 */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 输入框错误状态 */
+.input.error, .input2.error {
+    box-shadow: 
+        3px 3px 10px rgba(255, 107, 107, 0.5),
+        -1px -1px 6px rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 107, 107, 0.8);
 }

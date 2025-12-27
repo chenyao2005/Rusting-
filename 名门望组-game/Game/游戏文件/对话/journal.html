@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>剧情日志 - Rusting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #f0c674;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #b8b8b8;
+            font-size: 1.1em;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: #45a049;
+            transform: translateY(-50%) scale(1.05);
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .journal-entries {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .entry {
+            background: rgba(40, 40, 60, 0.7);
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .entry:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: rgba(50, 50, 70, 0.8);
+        }
+        
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .entry-title {
+            font-size: 1.3em;
+            color: #f0c674;
+            font-weight: bold;
+        }
+        
+        .entry-type {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+        
+        .entry-content {
+            margin: 15px 0;
+            line-height: 1.6;
+            color: #c0c0c0;
+        }
+        
+        .entry-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #888;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .jump-to-scene {
+            background: rgba(240, 198, 116, 0.2);
+            color: #f0c674;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .jump-to-scene:hover {
+            background: rgba(240, 198, 116, 0.4);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #f0c674;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .entry-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .entry-footer {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+        
+        /* 类型颜色 */
+        .type-clue { border-left-color: #4CAF50; }
+        .type-clue .entry-type { background: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+        
+        .type-dialogue { border-left-color: #2196F3; }
+        .type-dialogue .entry-type { background: rgba(33, 150, 243, 0.2); color: #2196F3; }
+        
+        .type-event { border-left-color: #FF9800; }
+        .type-event .entry-type { background: rgba(255, 152, 0, 0.2); color: #FF9800; }
+        
+        .type-location { border-left-color: #9C27B0; }
+        .type-location .entry-type { background: rgba(156, 39, 176, 0.2); color: #9C27B0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" onclick="returnToGame()">← 返回游戏</button>
+            <h1>📖 剧情日志</h1>
+            <p>已收集的线索与关键剧情</p>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterEntries('all')">全部</button>
+            <button class="filter-btn" onclick="filterEntries('clue')">线索</button>
+            <button class="filter-btn" onclick="filterEntries('dialogue')">对话</button>
+            <button class="filter-btn" onclick="filterEntries('event')">事件</button>
+            <button class="filter-btn" onclick="filterEntries('location')">地点</button>
+            <button class="filter-btn" onclick="clearAll()" style="background: rgba(244, 67, 54, 0.2); color: #f44336;">清空日志</button>
+        </div>
+        
+        <div class="journal-entries" id="entries-container">
+            <!-- 日志条目将通过JavaScript动态生成 -->
+        </div>
+        
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <h3>暂无记录</h3>
+            <p>在游戏中探索并触发关键剧情，它们会被自动记录在这里。</p>
+            <p>继续游戏来发现更多线索吧！</p>
+        </div>
+    </div>
+    
+    <script>
+        // 从 localStorage 加载日志条目
+        let journalEntries = [];
+        
+        function loadEntries() {
+            const saved = localStorage.getItem("journalEntries");
+            if (saved) {
+                journalEntries = JSON.parse(saved);
+                // 按时间倒序排列（最新的在前面）
+                journalEntries.sort((a, b) => b.id - a.id);
+            }
+            displayEntries();
+        }
+        
+        function displayEntries(filter = 'all') {
+            const container = document.getElementById('entries-container');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (journalEntries.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // 过滤条目
+            const filteredEntries = filter === 'all' 
+                ? journalEntries 
+                : journalEntries.filter(entry => entry.type === filter);
+            
+            if (filteredEntries.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>暂无此类记录</h3></div>';
+                return;
+            }
+            
+            // 生成条目HTML
+            container.innerHTML = filteredEntries.map(entry => `
+                <div class="entry type-${entry.type}" data-id="${entry.id}">
+                    <div class="entry-header">
+                        <div class="entry-title">${entry.title}</div>
+                        <div class="entry-type">${getTypeName(entry.type)}</div>
+                    </div>
+                    <div class="entry-content">
+                        ${entry.content}
+                    </div>
+                    <div class="entry-footer">
+                        <div class="entry-chapter">${entry.chapter}</div>
+                        <div class="entry-time">记录于 ${entry.timestamp}</div>
+                        ${entry.dialogueId ? 
+                            `<button class="jump-to-scene" onclick="jumpToScene(${entry.dialogueId})">
+                                跳转到相关剧情
+                            </button>` : 
+                            ''
+                        }
+                    </div>
+                </div>
+            `).join('');
+            
+            // 更新筛选按钮状态
+            updateFilterButtons(filter);
+        }
+        
+        function getTypeName(type) {
+            const typeNames = {
+                'clue': '线索',
+                'dialogue': '关键对话',
+                'event': '重要事件',
+                'location': '地点信息'
+            };
+            return typeNames[type] || type;
+        }
+        
+        function filterEntries(type) {
+            displayEntries(type);
+        }
+        
+        function updateFilterButtons(activeFilter) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.onclick && btn.onclick.toString().includes(`'${activeFilter}'`)) {
+                    btn.classList.add('active');
+                } else if (btn.textContent !== '清空日志') {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        function jumpToScene(dialogueId) {
+            // 保存日志页面状态
+            localStorage.setItem("CD", dialogueId);
+            // 返回游戏
+            window.location.href = "dialogue.html";
+        }
+        
+        function returnToGame() {
+    
+            const returnCD = localStorage.getItem("journalReturnCD");
+            const savedCD = localStorage.getItem("CD") || 0;
+            const targetCD = returnCD !== null ? returnCD : savedCD;
+
+            localStorage.setItem("CD", targetCD);
+
+            localStorage.removeItem("journalReturnCD");
+  
+            window.location.href = "dialogue.html";
+        }
+        
+        function clearAll() {
+            if (confirm('确定要清空所有日志记录吗？此操作不可恢复。')) {
+                localStorage.removeItem("journalEntries");
+                journalEntries = [];
+                displayEntries('all');
+            }
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEntries();
+        });
+    </script>
+</body>
+</html>
